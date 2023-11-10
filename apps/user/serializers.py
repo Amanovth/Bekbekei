@@ -7,14 +7,14 @@ class RegisterSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['phone', 'password', 'confirm_password']
+        fields = ["phone", "first_name", "last_name", "password", "confirm_password"]
 
     def save(self, **kwargs):
-        phone = self.validated_data['phone']
-        password = self.validated_data['password']
-        confirm_password = self.validated_data['confirm_password']
+        phone = self.validated_data["phone"]
+        password = self.validated_data["password"]
+        confirm_password = self.validated_data["confirm_password"]
         if password != confirm_password:
-            raise serializers.ValidationError('Пароли не совпадают!')
+            raise serializers.ValidationError("Пароли не совпадают!")
         else:
             user = User(
                 phone=phone,
@@ -22,7 +22,7 @@ class RegisterSerializers(serializers.ModelSerializer):
             user.set_password(password)
             user.save()
             return user
-        
+
 
 class VerifyPhoneSerializer(serializers.Serializer):
     phone = serializers.CharField()
@@ -37,8 +37,8 @@ class SendCodeSerializer(serializers.Serializer):
 
     class Meta:
         fields = ["phone"]
-        
-    
+
+
 class LoginSerializer(serializers.Serializer):
     phone = serializers.CharField(
         write_only=True,
@@ -51,13 +51,13 @@ class LoginSerializer(serializers.Serializer):
         # error_messages={"min_length": "Не менее 8 символов."},
     )
     token = serializers.CharField(read_only=True)
-    
+
 
 # class LoginSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = User
 #         fields = ['phone', 'password']
-        
+
 
 # class UserDetailSerializers(serializers.ModelSerializer):
 #     class Meta:
@@ -70,4 +70,4 @@ class LoginSerializer(serializers.Serializer):
 class QrCodeSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['bonus', 'qrimg']
+        fields = ["bonus", "qrimg"]

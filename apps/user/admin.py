@@ -8,7 +8,7 @@ class UserDetailInline(admin.StackedInline):
     model = UserDetail
     extra = 1
     max_num = 1
-    
+
 
 @admin.register(User)
 class UserAdmin(UserAdmin):
@@ -18,6 +18,8 @@ class UserAdmin(UserAdmin):
             {
                 "fields": (
                     "phone",
+                    "first_name",
+                    "last_name",
                     "password",
                     "bonus_id",
                     "bonus",
@@ -40,7 +42,12 @@ class UserAdmin(UserAdmin):
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
         (
             _("Верификация"),
-            {"fields": ("activated", "code",)},
+            {
+                "fields": (
+                    "activated",
+                    "code",
+                )
+            },
         ),
     )
     add_fieldsets = (
@@ -59,8 +66,18 @@ class UserAdmin(UserAdmin):
         ),
     )
 
-    list_display = ("id", "phone", "is_staff",)
-    list_display_links = ("id", "phone",)
-    search_fields = ("first_name", "last_name",)
+    list_display = (
+        "id",
+        "phone",
+        "is_staff",
+    )
+    list_display_links = (
+        "id",
+        "phone",
+    )
+    search_fields = (
+        "first_name",
+        "last_name",
+    )
     ordering = ("-id",)
     inlines = (UserDetailInline,)

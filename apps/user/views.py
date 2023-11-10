@@ -8,11 +8,11 @@ from django.contrib.auth import authenticate
 from .services import send_sms
 from .models import User
 from .serializers import (
-    RegisterSerializers, 
-    QrCodeSerializers, 
-    VerifyPhoneSerializer, 
-    SendCodeSerializer, 
-    LoginSerializer
+    RegisterSerializers,
+    QrCodeSerializers,
+    VerifyPhoneSerializer,
+    SendCodeSerializer,
+    LoginSerializer,
 )
 
 
@@ -27,16 +27,26 @@ class RegisterView(generics.CreateAPIView):
         if serializer.is_valid():
             serializer.save()
 
-            phone = serializer.data['phone']
-            sms = send_sms(phone)
-            if sms:
-                return Response({'message': _('User registered successfully.')}, status=status.HTTP_201_CREATED)
-            return Response({'message': _('Something went wrong!')}, status=status.HTTP_400_BAD_REQUEST)
+            phone = serializer.data["phone"]
+            # sms = send_sms(phone)
+            # if sms:
+            return Response(
+                {
+                    "response": True,
+                    "message": _("Пользователь успешно зарегистрирован."),
+                },
+                status=status.HTTP_201_CREATED,
+            )
+            # return Response(
+            #     {"response": False, "message": _("Something went wrong!")},
+            #     status=status.HTTP_400_BAD_REQUEST,
+            # )
         return Response(serializer.errors)
 
 
 class VerifyPhoneView(generics.GenericAPIView):
     serializer_class = VerifyPhoneSerializer
+
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
 
@@ -49,7 +59,7 @@ class VerifyPhoneView(generics.GenericAPIView):
 
                 if user.activated:
                     return Response({"message": _("Аккаунт уже подтвержден")})
-                
+
                 if user.code == code:
                     user.activated = True
                     user.save()
@@ -101,11 +111,9 @@ class SendCodeView(generics.GenericAPIView):
                 user.save()
 
                 sms = send_sms(phone)
-                
-                return Response(
-                    {"response": True, "message": _("Код отправлен")}
-                )
-                
+
+                return Response({"response": True, "message": _("Код отправлен")})
+
             return Response(
                 {"response": False, "message": _("Аккаунт уже подтвержден")}
             )
@@ -161,8 +169,9 @@ class LoginView(generics.GenericAPIView):
                     "isactivated": False,
                 }
             )
-        
+
         return Response(serializer.errors)
+
 
 class QrCodeView(generics.ListAPIView):
     queryset = User.objects.all()
