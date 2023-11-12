@@ -29,7 +29,7 @@ class StoryVideosSerializers(serializers.ModelSerializer):
         return 10000
 
     def get_url(self, obj):
-        return f"http://89.223.126.144:8000{obj.url.url}"
+        return f"http://89.223.126.144{obj.url.url}"
 
 
 class StoriesSerializers(serializers.ModelSerializer):
@@ -41,4 +41,4 @@ class StoriesSerializers(serializers.ModelSerializer):
         fields = ["id", "img", "created_at", "stories"]
 
     def get_img(self, obj):
-        return f"http://89.223.126.144:8000{obj.img.url}"
+        return f"http://89.223.126.144{obj.img.url}"

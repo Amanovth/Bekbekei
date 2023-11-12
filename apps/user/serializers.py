@@ -93,4 +93,4 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     def get_qrimg(self, obj):
         if obj.qrimg:
-            return f"http://89.223.126.144:8000{obj.qrimg.url}"
+            return f"http://89.223.126.144{obj.qrimg.url}"
