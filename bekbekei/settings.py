@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "django_filters",
     "smart_selects",
+    "corsheaders",
 
     "apps.user",
     "apps.main",
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
