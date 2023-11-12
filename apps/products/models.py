@@ -1,24 +1,23 @@
 from django.db import models
 from smart_selects.db_fields import ChainedForeignKey, GroupedForeignKey
-from datetime import datetime
-from django.utils.html import mark_safe
+from django.utils.translation import gettext_lazy as _
 
 
 class Category(models.Model):
-    name = models.CharField("Добавить категорию", max_length=200)
-    image = models.ImageField("Картинка категории", upload_to="product-category/%Y_%m")
+    name = models.CharField("Название", max_length=200)
+    img = models.ImageField("Изображение", upload_to="product-category/%Y_%m")
 
     def __str__(self):
         return f"{self.name}"
 
     class Meta:
-        verbose_name = "1 Тип товара"
-        verbose_name_plural = "1 Типы товаров"
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
 
 
 class SubCategory(models.Model):
-    cat = models.ForeignKey(Category, on_delete=models.CASCADE)
-    name = models.CharField("Подкатегория", max_length=200)
+    cat = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Категория", related_name="sub_categories")
+    name = models.CharField("Название", max_length=200)
 
     def __str__(self):
         return self.name
@@ -30,24 +29,30 @@ class SubCategory(models.Model):
 
 class Product(models.Model):
     PRICE_FOR_CHOICES = [
-        ("1", "сом/кг"),
-        ("2", "сом/шт")
+        (1, "кг"),
+        (2, "шт")
     ]
 
-    cat = models.ForeignKey(Category, on_delete=models.CASCADE)
-    sub_cat = GroupedForeignKey(SubCategory, "cat")
-    title = models.CharField("Название товара", max_length=300, blank=True, null=True)
-    product_code = models.CharField("Код товара", max_length=100)
+    cat = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Категория")
+    sub_cat = GroupedForeignKey(SubCategory, "cat", verbose_name="Подкатегория")
+    title = models.CharField("Название товара", max_length=300)
+    code = models.CharField("Код товара", max_length=100)
     pack = models.CharField('(Если упаковано - null) или "/480" г', max_length=20)
-    old_price = models.CharField("Старая цена (обновите если цена устела)", max_length=100, blank=True, null=True)
+    old_price = models.CharField("Старая цена", max_length=100, blank=True, null=True)
     price = models.IntegerField("Цена")
-    price_for = models.CharField("тип цены кг/штук", choices=PRICE_FOR_CHOICES, max_length=50)
-    images = models.ImageField("Картинка товара", upload_to="product-detail/%Y_%m")
+    price_for = models.IntegerField("Цена за", choices=PRICE_FOR_CHOICES)
+    img = models.ImageField("Изображение", upload_to="product-detail/%Y_%m")
+    sales = models.IntegerField(_("Количество продаж"), default=0)
 
     class Meta:
-        verbose_name = "2 Продукт"
-        verbose_name_plural = "2 Продукты"
+        verbose_name = "Продукт"
+        verbose_name_plural = "Продукты"
 
+    def save(self, *args, **kwargs):
+        # Set the cat based on the selected sub_cat
+        if self.sub_cat:
+            self.cat = self.sub_cat.cat
+        super().save(*args, **kwargs)
 
 # class NewsPaperInfo(models.Model):
 #     MONTHS = [

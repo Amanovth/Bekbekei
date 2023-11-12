@@ -1,13 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.admin import UserAdmin
-from .models import User, UserDetail
-
-
-class UserDetailInline(admin.StackedInline):
-    model = UserDetail
-    extra = 1
-    max_num = 1
+from .models import User
 
 
 @admin.register(User)
@@ -25,6 +19,22 @@ class UserAdmin(UserAdmin):
                     "bonus",
                     "qrimg",
                 )
+            },
+        ),
+        (
+            _("Детально"),
+            {
+                "fields": (
+                    "birthday",
+                    "gender",
+                    "language",
+                    "married",
+                    "status",
+                    "city",
+                    "children",
+                    "animal",
+                    "car",
+                ),
             },
         ),
         (
@@ -80,4 +90,3 @@ class UserAdmin(UserAdmin):
         "last_name",
     )
     ordering = ("-id",)
-    inlines = (UserDetailInline,)
