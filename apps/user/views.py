@@ -1,4 +1,13 @@
-from rest_framework import generics, status, permissions
+from rest_framework import status
+from rest_framework.generics import (
+    GenericAPIView,
+    CreateAPIView
+)
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated
+)
+from rest_framework.views import APIView
 from django.utils.translation import gettext_lazy as _
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
@@ -9,17 +18,17 @@ from .services import send_sms
 from .models import User
 from .serializers import (
     RegisterSerializers,
-    QrCodeSerializers,
     VerifyPhoneSerializer,
     SendCodeSerializer,
     LoginSerializer,
+    UserInfoSerializer
 )
 
 
-class RegisterView(generics.CreateAPIView):
+class RegisterView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializers
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
@@ -44,8 +53,9 @@ class RegisterView(generics.CreateAPIView):
         return Response(serializer.errors)
 
 
-class VerifyPhoneView(generics.GenericAPIView):
+class VerifyPhoneView(GenericAPIView):
     serializer_class = VerifyPhoneSerializer
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -89,8 +99,9 @@ class VerifyPhoneView(generics.GenericAPIView):
         )
 
 
-class SendCodeView(generics.GenericAPIView):
+class SendCodeView(GenericAPIView):
     serializer_class = SendCodeSerializer
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -123,8 +134,9 @@ class SendCodeView(generics.GenericAPIView):
         )
 
 
-class LoginView(generics.GenericAPIView):
+class LoginView(GenericAPIView):
     serializer_class = LoginSerializer
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -173,6 +185,9 @@ class LoginView(generics.GenericAPIView):
         return Response(serializer.errors)
 
 
-class QrCodeView(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = QrCodeSerializers
+class UserInfo(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user_info = UserInfoSerializer(request.user).data
+        return Response(user_info)

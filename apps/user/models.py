@@ -4,6 +4,8 @@ import qrcode
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 from .managers import CustomUserManager
 from .choices import *
@@ -21,12 +23,12 @@ class User(AbstractUser):
     qrimg = models.ImageField("QRcode Пользователя", null=True, blank=True)
 
     # Detail
-    birthday = models.DateField("Дата рождения")
-    gender = models.CharField("Пол", max_length=50, choices=GENDERS_CHOICES)
-    language = models.CharField("Родной язык", max_length=50, choices=LANGUAGE_CHOICES)
-    married = models.CharField("Семейное положение", max_length=100, choices=MARRIED_CHOICES)
-    status = models.CharField("Социальный статус", max_length=100, choices=SOCIAL_STATUS_CHOICES)
-    city = models.CharField("Город проживания", max_length=100, choices=CITY_CHOICES)
+    birthday = models.DateField("Дата рождения", null=True, blank=True)
+    gender = models.CharField("Пол", max_length=50, choices=GENDERS_CHOICES, null=True, blank=True)
+    language = models.CharField("Родной язык", max_length=50, choices=LANGUAGE_CHOICES, null=True, blank=True)
+    married = models.CharField("Семейное положение", max_length=100, choices=MARRIED_CHOICES, null=True, blank=True)
+    status = models.CharField("Социальный статус", max_length=100, choices=SOCIAL_STATUS_CHOICES, null=True, blank=True)
+    city = models.CharField("Город проживания", max_length=100, choices=CITY_CHOICES, null=True, blank=True)
     children = models.BooleanField("Наличие детей", default=False)
     animal = models.BooleanField("Наличие домашних животных", default=False)
     car = models.BooleanField("Наличие автомобиля", default=False)
@@ -42,12 +44,12 @@ class User(AbstractUser):
         self.bonus_id = bonus_id
         self.code = int(random.randint(100_000, 999_999))
 
-        super(User, self).save(*args, **kwargs)
-
         qr = qrcode.make(str(bonus_id))
         qr_path = f"user/bonus-qr/{bonus_id}.png"
         qr.save(os.path.join(settings.MEDIA_ROOT, qr_path))
         self.qrimg.name = qr_path
+
+        super(User, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Пользователь"

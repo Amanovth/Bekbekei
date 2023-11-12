@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.password_validation import validate_password
 from .models import User
 
 
@@ -9,19 +10,31 @@ class RegisterSerializers(serializers.ModelSerializer):
         model = User
         fields = ["phone", "first_name", "last_name", "password", "confirm_password"]
 
-    def save(self, **kwargs):
-        phone = self.validated_data["phone"]
-        password = self.validated_data["password"]
-        confirm_password = self.validated_data["confirm_password"]
+    def validate(self, attrs):
+        password = attrs.get("password")
+        confirm_password = attrs.get("confirm_password")
+
+        validate_password(password)
+
         if password != confirm_password:
             raise serializers.ValidationError("Пароли не совпадают!")
-        else:
-            user = User(
-                phone=phone,
-            )
-            user.set_password(password)
-            user.save()
-            return user
+
+        return attrs
+
+    def save(self, **kwargs):
+        phone = self.validated_data["phone"]
+        first_name = self.validated_data["first_name"]
+        last_name = self.validated_data["last_name"]
+        password = self.validated_data["password"]
+
+        user = User(
+            phone=phone,
+            first_name=first_name,
+            last_name=last_name
+        )
+        user.set_password(password)
+        user.save()
+        return user
 
 
 class VerifyPhoneSerializer(serializers.Serializer):
@@ -67,7 +80,17 @@ class LoginSerializer(serializers.Serializer):
 #                   'married', 'status', 'city', 'program_lang', 'animal', 'children', 'car']
 
 
-class QrCodeSerializers(serializers.ModelSerializer):
+class UserInfoSerializer(serializers.ModelSerializer):
+    qrimg = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ["bonus", "qrimg"]
+        fields = [
+            "phone", "first_name", "last_name", "bonus_id", "bonus", "qrimg",
+            "birthday", "gender", "language", "married", "status",
+            "city", "children", "animal", "car"
+        ]
+
+    def get_qrimg(self, obj):
+        if obj.qrimg:
+            return f"http://89.223.126.144:8000{obj.qrimg.url}"

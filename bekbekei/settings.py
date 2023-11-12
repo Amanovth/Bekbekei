@@ -1,5 +1,7 @@
 from pathlib import Path
 import os
+
+import django.contrib.auth.password_validation
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -86,7 +88,7 @@ DATABASES = {
         "PORT": os.getenv("PORT"),
     }
 }
-
+django.contrib.auth.password_validation.UserAttributeSimilarityValidator
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
