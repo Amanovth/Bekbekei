@@ -7,6 +7,7 @@ from .services import video_extensions
 class StoryVideosSerializers(serializers.ModelSerializer):
     type = serializers.SerializerMethodField()
     duration = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
 
     class Meta:
         model = StoryVideos
@@ -27,10 +28,17 @@ class StoryVideosSerializers(serializers.ModelSerializer):
     def get_duration(self, obj):
         return 10000
 
+    def get_url(self, obj):
+        return f"http://89.223.126.144:8000{obj.url.url}"
+
 
 class StoriesSerializers(serializers.ModelSerializer):
     stories = StoryVideosSerializers(many=True)
+    img = serializers.SerializerMethodField()
 
     class Meta:
         model = Stories
         fields = ["id", "img", "created_at", "stories"]
+
+    def get_img(self, obj):
+        return f"http://89.223.126.144:8000{obj.img.url}"
