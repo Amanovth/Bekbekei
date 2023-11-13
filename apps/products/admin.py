@@ -3,10 +3,16 @@ from django.utils.safestring import mark_safe
 from .models import Product, Category, SubCategory
 
 
+class SubCategoryInline(admin.StackedInline):
+    model = SubCategory
+    extra = 0
+
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "get_html_img",)
     list_display_links = ("id", "name",)
+    inlines = (SubCategoryInline,)
 
     def get_html_img(self, object):
         if object.img:
@@ -15,11 +21,11 @@ class CategoryAdmin(admin.ModelAdmin):
     get_html_img.short_description = "Изображение"
 
 
-@admin.register(SubCategory)
-class SubCategoryAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "cat",)
-    list_display_links = ("id", "name",)
-    list_filter = ("cat",)
+# @admin.register(SubCategory)
+# class SubCategoryAdmin(admin.ModelAdmin):
+#     list_display = ("id", "name", "cat",)
+#     list_display_links = ("id", "name",)
+#     list_filter = ("cat",)
 
 
 @admin.register(Product)

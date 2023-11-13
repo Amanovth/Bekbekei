@@ -49,7 +49,6 @@ class Product(models.Model):
         verbose_name_plural = "Продукты"
 
     def save(self, *args, **kwargs):
-        # Set the cat based on the selected sub_cat
         if self.sub_cat:
             self.cat = self.sub_cat.cat
         super().save(*args, **kwargs)

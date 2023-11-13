@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 class Stories(models.Model):
     created_at = models.DateTimeField(_("Дата и время"), auto_now_add=True)
     img = models.ImageField(_("Изображение"), upload_to="story_images")
+    link = models.URLField(_('Ссылка'), max_length=500, blank=True, null=True, help_text='Если есть')
 
     class Meta:
         verbose_name = _("История")

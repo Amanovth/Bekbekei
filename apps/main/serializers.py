@@ -38,7 +38,7 @@ class StoriesSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Stories
-        fields = ["id", "img", "created_at", "stories"]
+        fields = ["id", "img", "created_at", "stories", "link"]
 
     def get_img(self, obj):
         return f"http://89.223.126.144{obj.img.url}"

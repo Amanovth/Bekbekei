@@ -4,7 +4,6 @@ from rest_framework.generics import (
     CreateAPIView
 )
 from rest_framework.permissions import (
-    AllowAny,
     IsAuthenticated
 )
 from rest_framework.views import APIView
@@ -28,7 +27,6 @@ from .serializers import (
 class RegisterView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializers
-    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
@@ -55,7 +53,6 @@ class RegisterView(CreateAPIView):
 
 class VerifyPhoneView(GenericAPIView):
     serializer_class = VerifyPhoneSerializer
-    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -101,7 +98,6 @@ class VerifyPhoneView(GenericAPIView):
 
 class SendCodeView(GenericAPIView):
     serializer_class = SendCodeSerializer
-    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -136,7 +132,6 @@ class SendCodeView(GenericAPIView):
 
 class LoginView(GenericAPIView):
     serializer_class = LoginSerializer
-    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
