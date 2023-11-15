@@ -38,7 +38,8 @@ class RegisterView(CreateAPIView):
             serializer.save()
 
             phone = serializer.data["phone"]
-            # sms = send_sms(phone)
+            user = User.objects.get(phone=phone)
+            # sms = send_sms(phone, "Подтвердите номер для сброса пароля", user.code)
             # if sms:
             return Response(
                 {
@@ -226,7 +227,7 @@ class ResetPasswordView(GenericAPIView):
                 user = User.objects.get(phone=phone)
                 user.save()
 
-                send_sms(phone, _("Подтвердите номер для сброса пароля"), user.code)
+                send_sms(phone, "Подтвердите номер для сброса пароля", user.code)
                 return Response({"response": True, "message": _("Код подтверждения успешно отправлен")})
             except ObjectDoesNotExist:
                 return Response({"response": False, "message": _("Пользователь с таким номером не существует")})
