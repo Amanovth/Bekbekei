@@ -156,7 +156,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://89.223.126.144/",
+    "https://bekbekei.store",
 ]
 
 USE_DJANGO_JQUERY = True
