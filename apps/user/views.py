@@ -23,7 +23,8 @@ from .serializers import (
     UserInfoSerializer,
     ChangePasswordSerializer,
     ResetPasswordSerializer,
-    ResetPasswordVerifySerializer
+    ResetPasswordVerifySerializer,
+    UpdateUserDetailSerializer
 )
 
 
@@ -251,3 +252,10 @@ class ResetPasswordVerifyView(GenericAPIView):
             except ObjectDoesNotExist:
                 return Response({"response": False, "message": _("Пользователь с таким номером не существует")})
         return Response(serializer.errors)
+
+
+class UpdateUserDetailView(GenericAPIView):
+    serializer_class = UpdateUserDetailSerializer
+
+    def post(self, request):
+        pass

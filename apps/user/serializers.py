@@ -117,3 +117,9 @@ class ResetPasswordVerifySerializer(serializers.Serializer):
 
     class Meta:
         fields = ["phone", "code"]
+
+
+class UpdateUserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["last_name", "first_name", "birthday", "gender", "language", "status", "city", "animal", "car"]

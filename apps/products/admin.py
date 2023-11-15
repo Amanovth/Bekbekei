@@ -35,6 +35,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ("title", "code",)
     list_filter = ("cat", "sub_cat",)
     fields = ("sub_cat", "title", "code", "old_price", "price", "price_for", "img", "sales")
+    save_as = True
     # readonly_fields = ("sales",)
 
     def get_html_img(self, object):
