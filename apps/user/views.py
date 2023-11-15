@@ -255,7 +255,15 @@ class ResetPasswordVerifyView(GenericAPIView):
 
 
 class UpdateUserDetailView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UpdateUserDetailSerializer
 
     def post(self, request):
-        pass
+        user = request.user
+
+        serializer = self.serializer_class(user, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"response": True})
+        return Response(serializer.errors)
