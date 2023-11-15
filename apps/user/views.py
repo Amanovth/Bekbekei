@@ -20,7 +20,10 @@ from .serializers import (
     VerifyPhoneSerializer,
     SendCodeSerializer,
     LoginSerializer,
-    UserInfoSerializer
+    UserInfoSerializer,
+    ChangePasswordSerializer,
+    ResetPasswordSerializer,
+    ResetPasswordVerifySerializer
 )
 
 
@@ -146,7 +149,7 @@ class LoginView(GenericAPIView):
                 return Response(
                     {
                         "response": False,
-                        "message": "Пользователь с указанными учетными данными не существует",
+                        "message": _("Пользователь с указанными учетными данными не существует"),
                     }
                 )
 
@@ -156,7 +159,7 @@ class LoginView(GenericAPIView):
                 return Response(
                     {
                         "response": False,
-                        "message": "Невозможно войти в систему с указанными учетными данными",
+                        "message": _("Невозможно войти в систему с указанными учетными данными"),
                     }
                 )
 
@@ -172,7 +175,7 @@ class LoginView(GenericAPIView):
             return Response(
                 {
                     "response": False,
-                    "message": _("Потвердите адрес электронной почты"),
+                    "message": _("Подтвердите адрес электронной почты"),
                     "isactivated": False,
                 }
             )
@@ -188,4 +191,65 @@ class UserInfo(APIView):
         return Response(user_info)
 
 
-# class ChangePasswordView()
+class ChangePasswordView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ChangePasswordSerializer
+
+    def post(self, request):
+        user = request.user
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+
+            password = serializer.data["password"]
+            confirm_password = serializer.data["confirm_password"]
+
+            if password != confirm_password:
+                return Response({"response": False, "message": _("Пароли не совпадают")})
+
+            user.set_password(password)
+            user.save()
+
+            return Response({"response": False, "message": _("Пароль успешно обновлен")})
+        return Response(serializer.errors)
+
+
+class ResetPasswordView(GenericAPIView):
+    serializer_class = ResetPasswordSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            phone = serializer.data["phone"]
+            try:
+                user = User.objects.get(phone=phone)
+                user.save()
+
+                send_sms(phone, _("Подтвердите номер для сброса пароля"), user.code)
+                return Response({"response": True, "message": _("Код подтверждения успешно отправлен")})
+            except ObjectDoesNotExist:
+                return Response({"response": False, "message": _("Пользователь с таким номером не существует")})
+        return Response(serializer.errors)
+
+
+class ResetPasswordVerifyView(GenericAPIView):
+    serializer_class = ResetPasswordVerifySerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            code = serializer.data["code"]
+            phone = serializer.data["phone"]
+            try:
+                user = User.objects.get(phone=phone)
+
+                if user.code == code:
+                    token, created = Token.objects.get_or_create(user=user)
+
+                    return Response({"response": True, "token": token.key})
+                return Response({"response": False, "message": _("Введен неверный код")})
+            except ObjectDoesNotExist:
+                return Response({"response": False, "message": _("Пользователь с таким номером не существует")})
+        return Response(serializer.errors)

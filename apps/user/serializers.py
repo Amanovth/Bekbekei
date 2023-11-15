@@ -94,3 +94,26 @@ class UserInfoSerializer(serializers.ModelSerializer):
     def get_qrimg(self, obj):
         if obj.qrimg:
             return f"http://89.223.126.144{obj.qrimg.url}"
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(required=True)
+
+    class Meta:
+        fields = ["password", "confirm_password"]
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    phone = serializers.CharField(required=True)
+
+    class Meta:
+        fields = ["phone"]
+
+
+class ResetPasswordVerifySerializer(serializers.Serializer):
+    phone = serializers.CharField()
+    code = serializers.IntegerField()
+
+    class Meta:
+        fields = ["phone", "code"]

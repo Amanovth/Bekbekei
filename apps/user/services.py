@@ -3,9 +3,9 @@ from django.conf import settings
 import requests
 
 
-def send_sms(phone_number):
-    user = User.objects.get(phone=phone_number)
-    xml_data = f"""<?xml version="1.0" encoding="UTF-8"?><message><login>{settings.NIKITA_LOGIN}</login><pwd>{settings.NIKITA_PASSWORD}</pwd><sender>{settings.NIKITA_SENDER}</sender><text>{user.code}</text><phones><phone>{phone_number}</phone></phones></message>"""
+def send_sms(phone, message, code):
+    # user = User.objects.get(phone=phone)
+    xml_data = f"""<?xml version="1.0" encoding="UTF-8"?><message><login>{settings.NIKITA_LOGIN}</login><pwd>{settings.NIKITA_PASSWORD}</pwd><sender>{settings.NIKITA_SENDER}</sender><text>{message} {code}</text><phones><phone>{phone}</phone></phones></message>"""
 
     headers = {
         'Content-Type': 'application/xml'
