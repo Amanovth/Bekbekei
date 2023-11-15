@@ -150,6 +150,8 @@ NIKITA_SENDER = os.getenv("NITKITA_SENDER")
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://localhost:3000",
+    "http://localhost:3002",
 ]
 
 CSRF_TRUSTED_ORIGINS = [

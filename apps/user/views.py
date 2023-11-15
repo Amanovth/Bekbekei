@@ -186,3 +186,6 @@ class UserInfo(APIView):
     def get(self, request):
         user_info = UserInfoSerializer(request.user).data
         return Response(user_info)
+
+
+# class ChangePasswordView()

@@ -4,7 +4,9 @@ from .views import (
     VerifyPhoneView,
     SendCodeView,
     LoginView,
-    UserInfo
+    UserInfo,
+    # ChangePasswordView,
+    # PasswordResetView,
 )
 
 urlpatterns = [
@@ -12,5 +14,7 @@ urlpatterns = [
     path("verify-phone", VerifyPhoneView.as_view(), name="verify-phone"),
     path("send-code", SendCodeView.as_view(), name="send-code"),
     path("login", LoginView.as_view(), name="login"),
-    path("user-info", UserInfo.as_view(), name="user-info")
+    path("user-info", UserInfo.as_view(), name="user-info"),
+    # path("change-password", ChangePasswordView.as_view(), name="change-password")
+    # path("password-reset/", PasswordResetView.as_view(), name="password-reset-request"),
 ]
