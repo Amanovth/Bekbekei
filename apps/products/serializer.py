@@ -25,12 +25,11 @@ class SubCategoriesListSerializer(serializers.ModelSerializer):
 
 
 class CategoriesListSerializer(serializers.ModelSerializer):
-    sub_categories = SubCategoriesListSerializer(many=True)
     img = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
-        fields = ["id", "name", "img", "sub_categories"]
+        fields = ["id", "name", "img"]
 
     def get_img(self, obj):
         return f"http://89.223.126.144{obj.img.url}"
