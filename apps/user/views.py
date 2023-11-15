@@ -39,7 +39,7 @@ class RegisterView(CreateAPIView):
 
             phone = serializer.data["phone"]
             user = User.objects.get(phone=phone)
-            # sms = send_sms(phone, "Подтвердите номер для сброса пароля", user.code)
+            # sms = send_sms(phone, "Подтвердите номер телефона", user.code)
             # if sms:
             return Response(
                 {
@@ -121,17 +121,14 @@ class SendCodeView(GenericAPIView):
             if not user.activated:
                 user.save()
 
-                sms = send_sms(phone)
+                sms = send_sms(phone, "Ваш новый код подтверждения", user.code)
 
                 return Response({"response": True, "message": _("Код отправлен")})
 
             return Response(
                 {"response": False, "message": _("Аккаунт уже подтвержден")}
             )
-        return Response(
-            {"response": False, "detail": serializer.errors},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+        return Response(serializer.errors)
 
 
 class LoginView(GenericAPIView):
