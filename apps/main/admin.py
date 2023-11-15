@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Stories, StoryVideos
+from .models import Stories, StoryVideos, Cards
 
 
 class StoryVideosInline(admin.StackedInline):
@@ -12,3 +12,8 @@ class StoriesAdmin(admin.ModelAdmin):
     list_display = ("id", "created_at")
     list_display_links = list_display
     inlines = (StoryVideosInline,)
+
+
+@admin.register(Cards)
+class CardsAdmin(admin.ModelAdmin):
+    list_display = ["id", "datefrom", "dateto", "title"]

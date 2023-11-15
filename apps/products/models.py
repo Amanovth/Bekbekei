@@ -37,7 +37,7 @@ class Product(models.Model):
     sub_cat = GroupedForeignKey(SubCategory, "cat", verbose_name="Подкатегория")
     title = models.CharField("Название товара", max_length=300)
     code = models.CharField("Код товара", max_length=100)
-    pack = models.CharField('(Если упаковано - null) или "/480" г', max_length=20)
+    # pack = models.CharField('(Если упаковано - null) или "/480" г', max_length=20)
     old_price = models.CharField("Старая цена", max_length=100, blank=True, null=True)
     price = models.IntegerField("Цена")
     price_for = models.IntegerField("Цена за", choices=PRICE_FOR_CHOICES)

@@ -23,3 +23,23 @@ class StoryVideos(models.Model):
 
     def __str__(self):
         return self.created_at.strftime("%d %B %Y г. %H:%M")
+
+
+class Cards(models.Model):
+    TYPE_CHOICES = [
+        (1, 'Успей купить'),
+        (2, 'Специальные предложения')
+    ]
+
+    type = models.IntegerField('Тип', choices=TYPE_CHOICES)
+    title = models.CharField('Название', max_length=150, help_text='Успей купить!')
+    datefrom = models.DateField('Дата начала акции')
+    dateto = models.DateField('Дата окончания акции')
+    img = models.ImageField('Картинка', upload_to='promotions/%Y_%m')
+
+    class Meta:
+        verbose_name = 'Карточка'
+        verbose_name_plural = 'Карточки (Акция/Предложения)'
+
+    def __str__(self):
+        return self.title

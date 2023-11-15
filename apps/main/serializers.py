@@ -1,6 +1,6 @@
 from os.path import splitext
 from rest_framework import serializers
-from .models import Stories, StoryVideos
+from .models import Stories, StoryVideos, Cards
 from .services import video_extensions
 
 
@@ -42,3 +42,20 @@ class StoriesSerializers(serializers.ModelSerializer):
 
     def get_img(self, obj):
         return f"http://89.223.126.144{obj.img.url}"
+
+
+class CardListSerializers(serializers.ModelSerializer):
+    datefrom = serializers.SerializerMethodField()
+    dateto = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Cards
+        fields = "__all__"
+
+    def get_datefrom(self, obj):
+        if obj.datefrom:
+            return obj.datefrom.strftime("%d.%m")
+
+    def get_dateto(self, obj):
+        if obj.dateto:
+            return obj.dateto.strftime("%d.%m")

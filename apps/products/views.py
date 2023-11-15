@@ -5,11 +5,13 @@ from rest_framework.filters import SearchFilter
 from .filters import ProductFilter
 from .models import (
     Product,
-    Category
+    Category,
+    SubCategory
 )
 from .serializer import (
     ProductListSerializer,
-    CategoriesListSerializer
+    CategoriesListSerializer,
+    SubCategoriesListSerializer
 )
 
 
@@ -30,3 +32,11 @@ class ProductListView(ListAPIView):
 class CategoriesListView(ListAPIView):
     queryset = Category.objects.prefetch_related("sub_categories")
     serializer_class = CategoriesListSerializer
+
+
+class SubCategoriesListView(ListAPIView):
+    serializer_class = SubCategoriesListSerializer
+
+    def get_queryset(self):
+        return SubCategory.objects.filter(cat_id=self.kwargs["cat_id"])
+        
