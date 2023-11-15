@@ -150,7 +150,7 @@ NIKITA_SENDER = os.getenv("NITKITA_SENDER")
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://localhost:3000",
+    "http://localhost:3001",
     "http://localhost:3002",
 ]
 
