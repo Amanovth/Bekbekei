@@ -149,15 +149,14 @@ NIKITA_PASSWORD = os.getenv("NITKITA_PASSWORD")
 NIKITA_SENDER = os.getenv("NITKITA_SENDER")
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:3002",
-    "https://online-store-snowy.vercel.app"
+    # "*"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://bekbekei.store",
 ]
+
+CORS_ALLOW_METHODS = ("GET", "OPTIONS", "PATCH", "POST", "PUT", "DELETE")
 
 USE_DJANGO_JQUERY = True
 
