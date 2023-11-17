@@ -39,4 +39,10 @@ class SubCategoriesListView(ListAPIView):
 
     def get_queryset(self):
         return SubCategory.objects.filter(cat_id=self.kwargs["cat_id"])
-        
+
+
+class ProductListAllView(ListAPIView):
+    serializer_class = ProductListSerializer
+
+    def get_queryset(self):
+        return Product.objects.filter(cat_id=self.kwargs["cat_id"])
