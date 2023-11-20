@@ -1,7 +1,7 @@
 from rest_framework.generics import ListAPIView
 from rest_framework import generics
 from .models import Stories, Cards
-from .serializers import StoriesSerializers, CardListSerializers
+from .serializers import StoriesSerializers, CardSerializers
 
 
 class StoriesView(ListAPIView):
@@ -11,4 +11,9 @@ class StoriesView(ListAPIView):
 
 class CardListView(generics.ListAPIView):
     queryset = Cards.objects.all()
-    serializer_class = CardListSerializers
+    serializer_class = CardSerializers
+
+
+class CardDetailView(generics.RetrieveAPIView):
+    queryset = Cards.objects.all()
+    serializer_class = CardSerializers

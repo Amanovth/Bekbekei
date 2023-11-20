@@ -44,7 +44,7 @@ class StoriesSerializers(serializers.ModelSerializer):
         return f"https://bekbekei.store{obj.img.url}"
 
 
-class CardListSerializers(serializers.ModelSerializer):
+class CardSerializers(serializers.ModelSerializer):
     datefrom = serializers.SerializerMethodField()
     dateto = serializers.SerializerMethodField()
 
