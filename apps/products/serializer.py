@@ -7,7 +7,7 @@ from .models import (
 )
 
 
-class ProductListSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     img = serializers.SerializerMethodField()
 
     class Meta:

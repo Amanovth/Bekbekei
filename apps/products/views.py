@@ -1,4 +1,4 @@
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 
@@ -9,7 +9,7 @@ from .models import (
     SubCategory
 )
 from .serializer import (
-    ProductListSerializer,
+    ProductSerializer,
     CategoriesListSerializer,
     SubCategoriesListSerializer
 )
@@ -17,7 +17,7 @@ from .serializer import (
 
 class ProductListView(ListAPIView):
     queryset = Product.objects.select_related("cat", "sub_cat")
-    serializer_class = ProductListSerializer
+    serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = ProductFilter
     search_fields = ["title", "cat__name", "sub_cat__name", "code"]
@@ -27,6 +27,11 @@ class ProductListView(ListAPIView):
         ordering = self.request.query_params.get("ordering", "-id")
 
         return queryset.order_by(ordering)
+
+
+class ProductDetailView(RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
 
 class CategoriesListView(ListAPIView):
@@ -42,7 +47,7 @@ class SubCategoriesListView(ListAPIView):
 
 
 class ProductListAllView(ListAPIView):
-    serializer_class = ProductListSerializer
+    serializer_class = ProductSerializer
 
     def get_queryset(self):
         return Product.objects.filter(cat_id=self.kwargs["cat_id"])
