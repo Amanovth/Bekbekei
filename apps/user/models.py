@@ -43,8 +43,8 @@ class User(AbstractUser):
         bonus_id = f"312{self.phone}"
         self.bonus_id = bonus_id
         self.code = int(random.randint(100_000, 999_999))
-
-        qr = qrcode.make(str(bonus_id))
+        
+        qr = qrcode.make(str(bonus_id), border=2)
         qr_path = f"user/bonus-qr/{bonus_id}.png"
         qr.save(os.path.join(settings.MEDIA_ROOT, qr_path))
         self.qrimg.name = qr_path

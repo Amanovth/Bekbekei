@@ -2,6 +2,10 @@ from os.path import splitext
 from rest_framework import serializers
 from .models import Stories, StoryVideos, Cards
 from .services import video_extensions
+import locale
+
+locale.setlocale(
+    category=locale.LC_ALL)
 
 
 class StoryVideosSerializers(serializers.ModelSerializer):
@@ -47,6 +51,7 @@ class StoriesSerializers(serializers.ModelSerializer):
 class CardSerializers(serializers.ModelSerializer):
     datefrom = serializers.SerializerMethodField()
     dateto = serializers.SerializerMethodField()
+    date = serializers.SerializerMethodField()
 
     class Meta:
         model = Cards
@@ -59,3 +64,11 @@ class CardSerializers(serializers.ModelSerializer):
     def get_dateto(self, obj):
         if obj.dateto:
             return obj.dateto.strftime("%d.%m")
+        
+    def get_date(self, obj):
+        locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
+        if obj.date:
+            return obj.dateto.strftime("Акция действует до: %d %B %Y")
+
+
+# self.date = self.dateto.strftime()

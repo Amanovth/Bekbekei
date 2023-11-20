@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from ckeditor.fields import RichTextField
 
 
 class Stories(models.Model):
@@ -32,9 +33,11 @@ class Cards(models.Model):
     ]
 
     type = models.IntegerField('Тип', choices=TYPE_CHOICES)
+    text = RichTextField('Описание', blank=True, null=True)
     title = models.CharField('Название', max_length=150, help_text='Успей купить!')
     datefrom = models.DateField('Дата начала акции')
     dateto = models.DateField('Дата окончания акции')
+    date = models.CharField(blank=True, null=True, max_length=150, editable=False)
     img = models.ImageField('Картинка', upload_to='promotions/%Y_%m')
 
     class Meta:

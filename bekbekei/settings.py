@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "smart_selects",
     "corsheaders",
     "debug_toolbar",
+    "ckeditor",
 
     "apps.user",
     "apps.main",
