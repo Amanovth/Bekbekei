@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
+from datetime import datetime
 
 
 class Stories(models.Model):
@@ -33,7 +34,7 @@ class Cards(models.Model):
     ]
 
     type = models.IntegerField('Тип', choices=TYPE_CHOICES)
-    text = RichTextField('Описание', blank=True, null=True)
+    text = models.TextField('Описание', blank=True, null=True)
     title = models.CharField('Название', max_length=150, help_text='Успей купить!')
     datefrom = models.DateField('Дата начала акции')
     dateto = models.DateField('Дата окончания акции')
@@ -46,3 +47,9 @@ class Cards(models.Model):
 
     def __str__(self):
         return self.title
+
+    def delete(self):
+        if int(self.dateto.strftime('%d')) < int(datetime.today().strftime("%d")):
+            if int(self.dateto.strftime('%m')) == int(datetime.today().strftime("%m")):
+                self.delete()
+

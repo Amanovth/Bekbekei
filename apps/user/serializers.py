@@ -13,11 +13,15 @@ class RegisterSerializers(serializers.ModelSerializer):
     def validate(self, attrs):
         password = attrs.get("password")
         confirm_password = attrs.get("confirm_password")
+        phone = attrs.get("phone")
 
         validate_password(password)
 
         if password != confirm_password:
             raise serializers.ValidationError("Пароли не совпадают!")
+        
+        if User.objects.filter(phone=phone).exists():
+            raise serializers.ValidationError("Такой номер уже существует!")
 
         return attrs
 
@@ -66,19 +70,6 @@ class LoginSerializer(serializers.Serializer):
     token = serializers.CharField(read_only=True)
 
 
-# class LoginSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['phone', 'password']
-
-
-# class UserDetailSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model = CustomUserDetail
-#         fields = ['id', 'name', 'surname', 'third_name', 'birthday',
-#                   'gender', 'language',
-#                   'married', 'status', 'city', 'program_lang', 'animal', 'children', 'car']
-
 
 class UserInfoSerializer(serializers.ModelSerializer):
     qrimg = serializers.SerializerMethodField()
@@ -88,7 +79,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
         fields = [
             "phone", "first_name", "last_name", "bonus_id", "bonus", "qrimg",
             "birthday", "gender", "language", "married", "status",
-            "city", "children", "animal", "car"
+            "city", "children", "animal", "car", "email"
         ]
 
     def get_qrimg(self, obj):
@@ -122,4 +113,18 @@ class ResetPasswordVerifySerializer(serializers.Serializer):
 class UpdateUserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["last_name", "first_name", "birthday", "gender", "language", "status", "city", "animal", "car"]
+        fields = ["last_name", "first_name", "birthday", "gender", "language", "status", "city", "animal", "car", "married"]
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["notification", "email"]
+
+
+class DeleteAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
+
+        

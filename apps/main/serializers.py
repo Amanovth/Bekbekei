@@ -52,6 +52,7 @@ class CardSerializers(serializers.ModelSerializer):
     datefrom = serializers.SerializerMethodField()
     dateto = serializers.SerializerMethodField()
     date = serializers.SerializerMethodField()
+    img = serializers.SerializerMethodField()
 
     class Meta:
         model = Cards
@@ -69,6 +70,9 @@ class CardSerializers(serializers.ModelSerializer):
         locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
         if obj.date:
             return obj.dateto.strftime("Акция действует до: %d %B %Y")
+        
+    def get_img(self, obj):
+        return f"https://bekbekei.store{obj.img.url}"
 
 
 # self.date = self.dateto.strftime()

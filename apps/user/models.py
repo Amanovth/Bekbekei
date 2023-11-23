@@ -22,6 +22,12 @@ class User(AbstractUser):
     bonus = models.DecimalField("Бонус пользователя", max_digits=10, decimal_places=2, null=True, blank=True)
     qrimg = models.ImageField("QRcode Пользователя", null=True, blank=True)
 
+
+    # Notification 
+
+    notification = models.BooleanField("Получать уведомления", default=False)
+    email = models.EmailField("Электронная почта", max_length=254, blank=True, null=True)
+
     # Detail
     birthday = models.DateField("Дата рождения", null=True, blank=True)
     gender = models.CharField("Пол", max_length=50, choices=GENDERS_CHOICES, null=True, blank=True)

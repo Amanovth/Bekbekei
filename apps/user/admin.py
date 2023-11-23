@@ -25,6 +25,7 @@ class UserAdmin(UserAdmin):
             _("Детально"),
             {
                 "fields": (
+                    "email",
                     "birthday",
                     "gender",
                     "language",

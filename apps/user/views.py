@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.generics import (
     GenericAPIView,
-    CreateAPIView
+    CreateAPIView,
 )
 from rest_framework.permissions import (
     IsAuthenticated
@@ -24,7 +24,9 @@ from .serializers import (
     ChangePasswordSerializer,
     ResetPasswordSerializer,
     ResetPasswordVerifySerializer,
-    UpdateUserDetailSerializer
+    UpdateUserDetailSerializer,
+    NotificationSerializer,
+    DeleteAccountSerializer,
 )
 
 
@@ -45,7 +47,7 @@ class RegisterView(CreateAPIView):
             return Response(
                 {
                     "response": True,
-                    "message": _("Пользователь успешно зарегистрирован."),
+                    "message": _("Код подверждение был отправлен на ваш номер."),
                 },
                 status=status.HTTP_201_CREATED,
             )
@@ -81,7 +83,7 @@ class VerifyPhoneView(GenericAPIView):
                     return Response(
                         {
                             "response": True,
-                            "message": _("Верификация прошла успешно!"),
+                            "message": _("Пользователь успешно зарегистрирован."),
                             "token": token.key,
                         }
                     )
@@ -148,7 +150,7 @@ class LoginView(GenericAPIView):
                 return Response(
                     {
                         "response": False,
-                        "message": _("Пользователь с указанными учетными данными не существует"),
+                        "message": _("Пользователь с указанными телефоном не существует"),
                     }
                 )
 
@@ -158,7 +160,7 @@ class LoginView(GenericAPIView):
                 return Response(
                     {
                         "response": False,
-                        "message": _("Невозможно войти в систему с указанными учетными данными"),
+                        "message": _("Неверный пароль"),
                     }
                 )
 
@@ -167,7 +169,7 @@ class LoginView(GenericAPIView):
                 return Response(
                     {
                         "response": True,
-                        "isactivated": True,
+                        "message": "",
                         "token": token.key,
                     }
                 )
@@ -267,3 +269,36 @@ class UpdateUserDetailView(GenericAPIView):
             serializer.save()
             return Response({"response": True})
         return Response(serializer.errors)
+
+
+class NotificationView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = NotificationSerializer
+
+    def get(self, request):
+        user_info = self.serializer_class(request.user).data
+        return Response(user_info)
+
+    def post(self, request):
+        user = request.user
+
+        serializer = self.serializer_class(user, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"response": True})
+        return Response(serializer.error)
+    
+
+    
+
+class DeleteAccountView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+
+    def delete(self, request):
+        user = request.user
+        user.delete()
+
+        return Response({'message': 'Аккаунт успешно удалено!'}, status=status.HTTP_204_NO_CONTENT)
+    
