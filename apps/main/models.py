@@ -53,3 +53,17 @@ class Cards(models.Model):
             if int(self.dateto.strftime('%m')) == int(datetime.today().strftime("%m")):
                 self.delete()
 
+
+
+class Versions(models.Model):
+    version = models.CharField(_("Версия"), max_length=255)
+    appstore = models.URLField(_("App Store"))
+    googleplay = models.URLField(_("Google Play"))
+    date = models.DateTimeField(_("Дата"), auto_now_add=True)
+    
+    class Meta:
+        verbose_name = _("Версия приложения")
+        verbose_name_plural = _("Версии приложения")
+        
+    def __str__(self) -> str:
+        return self.version

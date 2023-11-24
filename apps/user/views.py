@@ -211,7 +211,7 @@ class ChangePasswordView(GenericAPIView):
             user.set_password(password)
             user.save()
 
-            return Response({"response": False, "message": _("Пароль успешно обновлен")})
+            return Response({"response": True, "message": _("Пароль успешно обновлен")})
         return Response(serializer.errors)
 
 
@@ -227,8 +227,8 @@ class ResetPasswordView(GenericAPIView):
                 user = User.objects.get(phone=phone)
                 user.save()
 
-                send_sms(phone, "Подтвердите номер для сброса пароля", user.code)
-                return Response({"response": True, "message": _("Код подтверждения успешно отправлен")})
+                # send_sms(phone, "Подтвердите номер для сброса пароля", user.code)
+                return Response({"response": True, "message": _("Код подверждение был отправлен на ваш номер")})
             except ObjectDoesNotExist:
                 return Response({"response": False, "message": _("Пользователь с таким номером не существует")})
         return Response(serializer.errors)

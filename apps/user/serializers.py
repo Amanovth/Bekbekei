@@ -4,7 +4,10 @@ from .models import User
 
 
 class RegisterSerializers(serializers.ModelSerializer):
-    confirm_password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True, required=True, min_length=8)
+    password = serializers.CharField(write_only=True, required=True, min_length=8)
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
 
     class Meta:
         model = User
@@ -79,7 +82,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
         fields = [
             "phone", "first_name", "last_name", "bonus_id", "bonus", "qrimg",
             "birthday", "gender", "language", "married", "status",
-            "city", "children", "animal", "car", "email"
+            "city", "children", "animal", "car", "email", "notification", "auto_brightness",
         ]
 
     def get_qrimg(self, obj):
@@ -88,15 +91,22 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-    password = serializers.CharField(required=True)
-    confirm_password = serializers.CharField(required=True)
-
-    class Meta:
-        fields = ["password", "confirm_password"]
-
+    password = serializers.CharField(
+        required=True, 
+        min_length=8, 
+        error_messages={"min_length": "Не менее 8 символов.", "required": "Это поле обязательно."}
+    )
+    confirm_password = serializers.CharField(
+        required=True,
+        min_length=8, 
+        error_messages={"min_length": "Не менее 8 символов.", "required": "Это поле обязательно."}
+    )
 
 class ResetPasswordSerializer(serializers.Serializer):
-    phone = serializers.CharField(required=True)
+    phone = serializers.CharField(
+        required=True, 
+        error_messages={"required": "Это поле обязательно."}
+    )
 
     class Meta:
         fields = ["phone"]
@@ -104,7 +114,10 @@ class ResetPasswordSerializer(serializers.Serializer):
 
 class ResetPasswordVerifySerializer(serializers.Serializer):
     phone = serializers.CharField()
-    code = serializers.IntegerField()
+    code = serializers.IntegerField(
+        required=True, 
+        error_messages={"required": "Это поле обязательно."}
+    )
 
     class Meta:
         fields = ["phone", "code"]
@@ -119,7 +132,7 @@ class UpdateUserDetailSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["notification", "email"]
+        fields = ["notification", "auto_brightness", "email"]
 
 
 class DeleteAccountSerializer(serializers.ModelSerializer):

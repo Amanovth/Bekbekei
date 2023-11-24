@@ -26,6 +26,7 @@ class User(AbstractUser):
     # Notification 
 
     notification = models.BooleanField("Получать уведомления", default=False)
+    auto_brightness =  models.BooleanField("Авто яркость", default=False)
     email = models.EmailField("Электронная почта", max_length=254, blank=True, null=True)
 
     # Detail

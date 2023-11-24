@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Stories, StoryVideos, Cards
+from .models import Stories, StoryVideos, Cards, Versions
 from django.utils.safestring import mark_safe
 
 
@@ -28,3 +28,9 @@ class CardsAdmin(admin.ModelAdmin):
             return mark_safe(f"<img src='{object.img.url}' height='60'>")
 
     get_html_img.short_description = "Изображение"
+
+    
+@admin.register(Versions)
+class VersionsAdmin(admin.ModelAdmin):
+    list_display = ("version", "date",)
+    list_display_links = list_display
