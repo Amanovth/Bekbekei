@@ -29,8 +29,8 @@ class SubCategory(models.Model):
 
 class Product(models.Model):
     PRICE_FOR_CHOICES = [
-        (1, "кг"),
-        (2, "шт")
+        ("кг", "кг"),
+        ("шт", "шт")
     ]
 
     cat = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Категория")
@@ -39,7 +39,7 @@ class Product(models.Model):
     code = models.CharField("Код товара", max_length=100)
     # pack = models.CharField('(Если упаковано - null) или "/480" г', max_length=20)
     old_price = models.CharField("Старая цена", max_length=100, blank=True, null=True)
-    price = models.IntegerField("Цена")
+    price = models.CharField("Цена", default="шт", max_length=2)
     price_for = models.IntegerField("Цена за", choices=PRICE_FOR_CHOICES)
     img = models.ImageField("Изображение", upload_to="product-detail/%Y_%m")
     sales = models.IntegerField(_("Количество продаж"), default=0)
