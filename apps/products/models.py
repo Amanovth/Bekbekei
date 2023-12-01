@@ -39,8 +39,8 @@ class Product(models.Model):
     code = models.CharField("Код товара", max_length=100)
     # pack = models.CharField('(Если упаковано - null) или "/480" г', max_length=20)
     old_price = models.CharField("Старая цена", max_length=100, blank=True, null=True)
-    price = models.CharField("Цена", default="шт", max_length=2)
-    price_for = models.IntegerField("Цена за", choices=PRICE_FOR_CHOICES)
+    price = models.IntegerField("Цена")
+    price_for = models.CharField("Цена за", choices=PRICE_FOR_CHOICES, default="шт")
     img = models.ImageField("Изображение", upload_to="product-detail/%Y_%m")
     sales = models.IntegerField(_("Количество продаж"), default=0)
 

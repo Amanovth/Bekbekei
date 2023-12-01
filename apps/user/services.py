@@ -5,7 +5,8 @@ import requests
 
 def send_sms(phone, message, code):
     # user = User.objects.get(phone=phone)
-    xml_data = f"""<?xml version="1.0" encoding="UTF-8"?><message><login>{settings.NIKITA_LOGIN}</login><pwd>{settings.NIKITA_PASSWORD}</pwd><sender>{settings.NIKITA_SENDER}</sender><text>{message} {code}</text><phones><phone>{phone}</phone></phones></message>"""
+    new_phone = ''.join(filter(str.isdigit, phone))
+    xml_data = f"""<?xml version="1.0" encoding="UTF-8"?><message><login>{settings.NIKITA_LOGIN}</login><pwd>{settings.NIKITA_PASSWORD}</pwd><sender>{settings.NIKITA_SENDER}</sender><text>{message} {code}</text><phones><phone>{new_phone}</phone></phones></message>"""
 
     headers = {
         'Content-Type': 'application/xml'

@@ -45,8 +45,12 @@ class RegisterSerializers(serializers.ModelSerializer):
 
 
 class VerifyPhoneSerializer(serializers.Serializer):
-    phone = serializers.CharField()
-    code = serializers.IntegerField()
+    phone = serializers.CharField(
+        required=True,
+    )
+    code = serializers.IntegerField(
+        required=True
+    )
 
     class Meta:
         fields = ["phone", "code"]

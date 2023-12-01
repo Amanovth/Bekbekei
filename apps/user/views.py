@@ -42,19 +42,19 @@ class RegisterView(CreateAPIView):
 
             phone = serializer.data["phone"]
             user = User.objects.get(phone=phone)
-            # sms = send_sms(phone, "Подтвердите номер телефона", user.code)
-            # if sms:
+            sms = send_sms(phone, "Подтвердите номер телефона", user.code)
+            if sms:
+                return Response(
+                    {
+                        "response": True,
+                        "message": _("Код подверждение был отправлен на ваш номер."),
+                    },
+                    status=status.HTTP_201_CREATED,
+                )
             return Response(
-                {
-                    "response": True,
-                    "message": _("Код подверждение был отправлен на ваш номер."),
-                },
-                status=status.HTTP_201_CREATED,
+                {"response": False, "message": _("Something went wrong!")},
+                status=status.HTTP_400_BAD_REQUEST,
             )
-            # return Response(
-            #     {"response": False, "message": _("Something went wrong!")},
-            #     status=status.HTTP_400_BAD_REQUEST,
-            # )
         return Response(serializer.errors)
 
 
@@ -227,7 +227,7 @@ class ResetPasswordView(GenericAPIView):
                 user = User.objects.get(phone=phone)
                 user.save()
 
-                # send_sms(phone, "Подтвердите номер для сброса пароля", user.code)
+                send_sms(phone, "Подтвердите номер для сброса пароля", user.code)
                 return Response({"response": True, "message": _("Код подверждение был отправлен на ваш номер")})
             except ObjectDoesNotExist:
                 return Response({"response": False, "message": _("Пользователь с таким номером не существует")})
