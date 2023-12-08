@@ -25,8 +25,9 @@ class ProductListView(ListAPIView):
     def get_queryset(self):
         queryset = super().get_queryset()
         ordering = self.request.query_params.get("ordering", "-id")
-
-        return queryset.order_by(ordering)
+        if ordering:
+            return queryset.order_by(ordering)
+        return queryset
 
 
 class ProductDetailView(RetrieveAPIView):

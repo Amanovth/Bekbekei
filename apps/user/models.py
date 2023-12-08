@@ -47,8 +47,10 @@ class User(AbstractUser):
         return str(self.phone)  # Вернем номер телефона в виде строки
 
     def save(self, *args, **kwargs):
-        bonus_id = f"312{self.phone}"
+        super(User, self).save(*args, **kwargs)
+        bonus_id = f"{1000200030004000 + int(self.id)}"
         self.bonus_id = bonus_id
+
         self.code = int(random.randint(100_000, 999_999))
         
         qr = qrcode.make(str(bonus_id), border=2)

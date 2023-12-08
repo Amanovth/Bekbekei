@@ -145,7 +145,7 @@ class LoginView(GenericAPIView):
             password = request.data.get("password")
 
             try:
-                get_user = User.objects.get(phone=phone)
+                get_user = User.objects.get(phone=f"{''.join(filter(str.isdigit, phone))}")
             except ObjectDoesNotExist:
                 return Response(
                     {
@@ -154,7 +154,7 @@ class LoginView(GenericAPIView):
                     }
                 )
 
-            user = authenticate(request, phone=phone, password=password)
+            user = authenticate(request, phone=f"{''.join(filter(str.isdigit, phone))}", password=password)
 
             if not user:
                 return Response(
@@ -224,7 +224,7 @@ class ResetPasswordView(GenericAPIView):
         if serializer.is_valid():
             phone = serializer.data["phone"]
             try:
-                user = User.objects.get(phone=phone)
+                user = User.objects.get(phone=f"{''.join(filter(str.isdigit, phone))}")
                 user.save()
 
                 send_sms(phone, "Подтвердите номер для сброса пароля", user.code)
@@ -244,7 +244,7 @@ class ResetPasswordVerifyView(GenericAPIView):
             code = serializer.data["code"]
             phone = serializer.data["phone"]
             try:
-                user = User.objects.get(phone=phone)
+                user = User.objects.get(phone=f"{''.join(filter(str.isdigit, phone))}")
 
                 if user.code == code:
                     token, created = Token.objects.get_or_create(user=user)

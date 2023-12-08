@@ -8,6 +8,11 @@ class RegisterSerializers(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, min_length=8)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
+    phone = serializers.CharField(
+        required=True, 
+        min_length=19,
+        error_messages={"min_length": "Введите правильный номер"},
+    )
 
     class Meta:
         model = User
@@ -16,14 +21,15 @@ class RegisterSerializers(serializers.ModelSerializer):
     def validate(self, attrs):
         password = attrs.get("password")
         confirm_password = attrs.get("confirm_password")
-        phone = attrs.get("phone")
+
+        attrs["phone"] = f"{''.join(filter(str.isdigit, attrs.get('phone')))}"
 
         validate_password(password)
 
         if password != confirm_password:
             raise serializers.ValidationError("Пароли не совпадают!")
         
-        if User.objects.filter(phone=phone).exists():
+        if User.objects.filter(phone=attrs.get("phone")).exists():
             raise serializers.ValidationError("Такой номер уже существует!")
 
         return attrs
@@ -55,12 +61,19 @@ class VerifyPhoneSerializer(serializers.Serializer):
     class Meta:
         fields = ["phone", "code"]
 
+    def validate(self, attrs):
+        attrs["phone"] = f"{''.join(filter(str.isdigit, attrs.get('phone')))}"
+        return super().validate(attrs)
+
 
 class SendCodeSerializer(serializers.Serializer):
     phone = serializers.CharField()
 
     class Meta:
         fields = ["phone"]
+
+    def validate(self, attrs):
+        return super().validate(attrs)
 
 
 class LoginSerializer(serializers.Serializer):
@@ -75,6 +88,10 @@ class LoginSerializer(serializers.Serializer):
         # error_messages={"min_length": "Не менее 8 символов."},
     )
     token = serializers.CharField(read_only=True)
+
+    def validate(self, attrs):
+        attrs['phone'] = f"{''.join(filter(str.isdigit, attrs.get('phone')))}"
+        return super().validate(attrs)
 
 
 
@@ -115,6 +132,9 @@ class ResetPasswordSerializer(serializers.Serializer):
     class Meta:
         fields = ["phone"]
 
+    def validate(self, attrs):
+        return super().validate(attrs)
+
 
 class ResetPasswordVerifySerializer(serializers.Serializer):
     phone = serializers.CharField()
@@ -125,6 +145,9 @@ class ResetPasswordVerifySerializer(serializers.Serializer):
 
     class Meta:
         fields = ["phone", "code"]
+
+    def validate(self, attrs):
+        return super().validate(attrs)
 
 
 class UpdateUserDetailSerializer(serializers.ModelSerializer):
