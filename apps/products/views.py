@@ -24,6 +24,7 @@ class ProductListView(ListAPIView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        queryset = queryset.filter(status=True)
         ordering = self.request.query_params.get("ordering", "-id")
         if ordering:
             return queryset.order_by(ordering)
@@ -31,7 +32,7 @@ class ProductListView(ListAPIView):
 
 
 class ProductDetailView(RetrieveAPIView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(status=True)
     serializer_class = ProductSerializer
 
 
@@ -51,4 +52,4 @@ class ProductListAllView(ListAPIView):
     serializer_class = ProductSerializer
 
     def get_queryset(self):
-        return Product.objects.filter(cat_id=self.kwargs["cat_id"])
+        return Product.objects.filter(cat_id=self.kwargs["cat_id"], status=True)

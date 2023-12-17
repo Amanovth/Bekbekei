@@ -30,7 +30,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "code", "sub_cat", "get_html_img")
+    list_display = ("id", "title", "code", "sub_cat", "get_html_img", "status")
+    list_editable = ["status"]
     list_display_links = ("id", "title", "code",)
     search_fields = ("title", "code",)
     list_filter = ("cat", "sub_cat",)

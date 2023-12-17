@@ -1,7 +1,9 @@
 from django.db import models
 from smart_selects.db_fields import ChainedForeignKey, GroupedForeignKey
 from django.utils.translation import gettext_lazy as _
-
+from PIL import Image, ImageDraw, ImageFont
+import os
+from django.conf import settings
 
 class Category(models.Model):
     name = models.CharField("Название", max_length=200)
@@ -43,6 +45,7 @@ class Product(models.Model):
     price_for = models.CharField("Цена за", choices=PRICE_FOR_CHOICES, default="шт")
     img = models.ImageField("Изображение", upload_to="product-detail/%Y_%m")
     sales = models.IntegerField(_("Количество продаж"), default=0)
+    status  = models.BooleanField(_('Показать в мобильном приложении'), default=True)
 
     class Meta:
         verbose_name = "Продукт"
@@ -52,6 +55,28 @@ class Product(models.Model):
         if self.sub_cat:
             self.cat = self.sub_cat.cat
         super().save(*args, **kwargs)
+
+        watermark_path = os.path.join(os.path.dirname(__file__), 'mark.png')
+        watermark = Image.open(watermark_path).convert("RGBA")
+
+        img_path = os.path.join(settings.MEDIA_ROOT, f"{self.img.name}")
+        img = Image.open(img_path).convert("RGBA").copy()
+
+        img_width, img_height = img.size
+        watermark_width, watermark_height = watermark.size
+
+        scale = 0.5
+        new_watermark_width = int(img_width * scale)
+        new_watermark_height = int((new_watermark_width / watermark_width) * watermark_height)
+        resized_watermark = watermark.resize((new_watermark_width, new_watermark_height))
+
+        x = (img_width - new_watermark_width) // 2
+        y = (img_height - new_watermark_height) // 2
+
+        img.paste(resized_watermark, (x, y), resized_watermark)
+
+        img.save(img_path, format="png", quality=100)
+
 
 # class NewsPaperInfo(models.Model):
 #     MONTHS = [

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from .models import User
+from .services import os_getbalance
 
 
 class RegisterSerializers(serializers.ModelSerializer):
@@ -97,6 +98,7 @@ class LoginSerializer(serializers.Serializer):
 
 class UserInfoSerializer(serializers.ModelSerializer):
     qrimg = serializers.SerializerMethodField()
+    bonus = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -109,6 +111,9 @@ class UserInfoSerializer(serializers.ModelSerializer):
     def get_qrimg(self, obj):
         if obj.qrimg:
             return f"https://bekbekei.store{obj.qrimg.url}"
+
+    def get_bonus(self, obj):
+        return os_getbalance('bonus_id')
 
 
 class ChangePasswordSerializer(serializers.Serializer):

@@ -13,7 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 
-from .services import send_sms
+from .services import send_sms, os_registration
 from .models import User
 from .serializers import (
     RegisterSerializers,
@@ -42,17 +42,29 @@ class RegisterView(CreateAPIView):
 
             phone = serializer.data["phone"]
             user = User.objects.get(phone=phone)
-            sms = send_sms(phone, "Подтвердите номер телефона", user.code)
-            if sms:
+
+            user_id = user.id
+            user_card = user.bonus_id
+            firstname = user.first_name
+            lastname = user.last_name
+            os_registration(user_id, user_card, firstname, lastname)
+
+            if os_registration:
+                sms = send_sms(phone, "Подтвердите номер телефона", user.code)
+                if sms:
+                    return Response(
+                        {
+                            "response": True,
+                            "message": _("Код подверждение был отправлен на ваш номер."),
+                        },
+                        status=status.HTTP_201_CREATED,
+                    )
                 return Response(
-                    {
-                        "response": True,
-                        "message": _("Код подверждение был отправлен на ваш номер."),
-                    },
-                    status=status.HTTP_201_CREATED,
+                    {"response": False, "message": _("Something went wrong!")},
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
             return Response(
-                {"response": False, "message": _("Something went wrong!")},
+                {"response": False, "message": _("Something went wrong with registration!")},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return Response(serializer.errors)
@@ -288,17 +300,13 @@ class NotificationView(GenericAPIView):
             serializer.save()
             return Response({"response": True})
         return Response(serializer.error)
-    
 
-    
 
 class DeleteAccountView(APIView):
     permission_classes = [IsAuthenticated]
-    
 
     def delete(self, request):
         user = request.user
         user.delete()
 
         return Response({'message': 'Аккаунт успешно удалено!'}, status=status.HTTP_204_NO_CONTENT)
-    

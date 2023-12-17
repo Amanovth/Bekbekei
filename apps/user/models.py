@@ -49,6 +49,7 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         super(User, self).save(*args, **kwargs)
         bonus_id = f"{1000200030004000 + int(self.id)}"
+        bonus_id = ' '.join([str(bonus_id)[i:i+4] for i in range(0, len(str(bonus_id)), 4)])
         self.bonus_id = bonus_id
 
         self.code = int(random.randint(100_000, 999_999))
@@ -59,6 +60,7 @@ class User(AbstractUser):
         self.qrimg.name = qr_path
 
         super(User, self).save(*args, **kwargs)
+
 
     class Meta:
         verbose_name = "Пользователь"
