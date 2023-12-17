@@ -148,7 +148,11 @@ REST_FRAMEWORK = {
 NIKITA_LOGIN = os.getenv("NITKITA_LOGIN")
 NIKITA_PASSWORD = os.getenv("NITKITA_PASSWORD")
 NIKITA_SENDER = os.getenv("NITKITA_SENDER")
+
+# 1C urls
 ONE_C = os.getenv('ONE_C')
+ONE_C_REG = os.getenv('ONE_C_REG')
+ONE_C_BAL = os.getenv('ONE_C_BAL')
 
 CORS_ALLOWED_ORIGINS = [
     # "*"

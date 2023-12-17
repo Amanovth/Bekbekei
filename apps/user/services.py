@@ -22,7 +22,7 @@ def send_sms(phone, message, code):
 
 
 def os_registration(user_id, user_card, firstname, lastname):
-    url = "http://31.186.48.247/Roznica/hs/MobileApp/registration"
+    url = settings.ONE_C_REG
 
     params = {
         "user_id": int(user_id),
@@ -47,7 +47,7 @@ def os_registration(user_id, user_card, firstname, lastname):
 
 
 def os_getbalance(user_id):
-    url = "http://31.186.48.247/Roznica/hs/MobileApp/balance"
+    url = settings.ONE_C_BAL
 
     params = {"user_id": user_id}
 
