@@ -53,7 +53,22 @@ class Cards(models.Model):
             if int(self.dateto.strftime('%m')) == int(datetime.today().strftime("%m")):
                 self.delete()
 
+class Notifications(models.Model):
+    title = models.CharField(_('Уведомление'), max_length=1000)
+    description = RichTextField(_("Описание"), blank=True, null=True)
+    date = models.DateField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = 'Уведомления'
+        verbose_name_plural = 'Уведомлении'
+
+class NotificationsImg(models.Model):
+    notification = models.ForeignKey(Notifications, on_delete=models.CASCADE, related_name='img')
+    img = models.ImageField(_("Картинка"), upload_to='notifications/%Y_%m')
+
+    class Meta:
+        verbose_name = 'Картинка'
+        verbose_name_plural = 'Картинки'
 
 class Versions(models.Model):
     version = models.CharField(_("Версия"), max_length=255)

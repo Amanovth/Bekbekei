@@ -113,7 +113,8 @@ class UserInfoSerializer(serializers.ModelSerializer):
             return f"https://bekbekei.store{obj.qrimg.url}"
 
     def get_bonus(self, obj):
-        return os_getbalance('bonus_id')
+        user_id = obj.id
+        return os_getbalance(user_id)
 
 
 class ChangePasswordSerializer(serializers.Serializer):

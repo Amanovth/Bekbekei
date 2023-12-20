@@ -188,7 +188,7 @@ class LoginView(GenericAPIView):
             return Response(
                 {
                     "response": False,
-                    "message": _("Подтвердите адрес электронной почты"),
+                    "message": _("Подтвердите номер чтобы войти!"),
                     "isactivated": False,
                 }
             )

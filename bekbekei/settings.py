@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "debug_toolbar",
     "ckeditor",
+    "admin_extra_buttons",
 
     "apps.user",
     "apps.main",

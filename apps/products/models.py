@@ -35,6 +35,8 @@ class Product(models.Model):
         ("шт", "шт")
     ]
 
+    base_product_id = models.CharField(_("Айди товара в 1C"), max_length=500, blank=True, null=True, editable=False)
+    
     cat = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Категория")
     sub_cat = GroupedForeignKey(SubCategory, "cat", verbose_name="Подкатегория")
     title = models.CharField("Название товара", max_length=300)

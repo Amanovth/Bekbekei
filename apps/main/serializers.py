@@ -1,6 +1,13 @@
 from os.path import splitext
 from rest_framework import serializers
-from .models import Stories, StoryVideos, Cards, Versions
+from .models import (
+    Stories,
+    StoryVideos,
+    Cards,
+    Versions,
+    Notifications,
+    NotificationsImg,
+)
 from .services import video_extensions
 import locale
 
@@ -72,6 +79,26 @@ class CardSerializers(serializers.ModelSerializer):
 
     def get_img(self, obj):
         return f"https://bekbekei.store{obj.img.url}"
+
+
+class NotificationsImgSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NotificationsImg
+        fields = ["id", "img"]
+
+
+class NotificationsSerializer(serializers.ModelSerializer):
+    img = NotificationsImgSerializer(many=True, read_only=True)
+    date = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Notifications
+        fields = ["id", "title", "description", "date", "img"]
+
+    def get_date(self, obj):
+        locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
+        if obj.date:
+            return obj.date.strftime("%d %B")
 
 
 class VersionsSerializer(serializers.ModelSerializer):
