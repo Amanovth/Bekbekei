@@ -5,6 +5,6 @@ from django.utils.translation import gettext_lazy as _
 def validate_phone(value):
     if len(value) != 19:
         raise ValidationError(
-            _("Введите парвильный номер"),
+            _("Введите правильный номер"),
             params={"value": value},
         )
