@@ -14,9 +14,15 @@ class StoriesView(ListAPIView):
     serializer_class = StoriesSerializers
 
 
-class CardListView(generics.ListAPIView):
-    queryset = Cards.objects.all()
+class CardListOneView(generics.ListAPIView):
+    queryset = Cards.objects.filter(type="1")
     serializer_class = CardSerializers
+
+
+class CardListTwoView(generics.ListAPIView):
+    queryset = Cards.objects.filter(type="2")
+    serializer_class = CardSerializers
+
 
 
 class CardDetailView(generics.RetrieveAPIView):

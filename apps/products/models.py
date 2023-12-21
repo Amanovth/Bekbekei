@@ -35,19 +35,21 @@ class Product(models.Model):
         ("шт", "шт")
     ]
 
-    base_product_id = models.CharField(_("Айди товара в 1C"), max_length=500, blank=True, null=True, editable=False)
-    
+    status  = models.BooleanField(_('Показать в мобильном приложении'), default=False)
     cat = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Категория")
-    sub_cat = GroupedForeignKey(SubCategory, "cat", verbose_name="Подкатегория")
+    sub_cat = GroupedForeignKey(SubCategory, "cat", verbose_name="Подкатегория", null=True, blank=True)
     title = models.CharField("Название товара", max_length=300)
-    code = models.CharField("Код товара", max_length=100)
+    code = models.CharField("Код товара", max_length=100, null=True, blank=True, unique=True)
     # pack = models.CharField('(Если упаковано - null) или "/480" г', max_length=20)
     old_price = models.CharField("Старая цена", max_length=100, blank=True, null=True)
     price = models.FloatField("Цена")
     price_for = models.CharField("Цена за", choices=PRICE_FOR_CHOICES, default="шт")
-    img = models.ImageField("Изображение", upload_to="product-detail/%Y_%m")
+    img = models.ImageField("Изображение", upload_to="product-detail/%Y_%m", null=True, blank=True)
     sales = models.IntegerField(_("Количество продаж"), default=0)
-    status  = models.BooleanField(_('Показать в мобильном приложении'), default=True)
+    quantity = models.CharField(null=True, blank=True)
+
+    # created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания", blank=True, null=True)
+    # updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата последнего изменения", blank=True, null=True)
 
     class Meta:
         verbose_name = "Продукт"
@@ -56,28 +58,31 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         if self.sub_cat:
             self.cat = self.sub_cat.cat
+        # if not self.price:
+        #     self.price = '00.00'
         super().save(*args, **kwargs)
 
-        watermark_path = os.path.join(os.path.dirname(__file__), 'mark.png')
-        watermark = Image.open(watermark_path).convert("RGBA")
+        if self.img:
+            watermark_path = os.path.join(os.path.dirname(__file__), 'mark.png')
+            watermark = Image.open(watermark_path).convert("RGBA")
 
-        img_path = os.path.join(settings.MEDIA_ROOT, f"{self.img.name}")
-        img = Image.open(img_path).convert("RGBA").copy()
+            img_path = os.path.join(settings.MEDIA_ROOT, f"{self.img.name}")
+            img = Image.open(img_path).convert("RGBA").copy()
 
-        img_width, img_height = img.size
-        watermark_width, watermark_height = watermark.size
+            img_width, img_height = img.size
+            watermark_width, watermark_height = watermark.size
 
-        scale = 0.5
-        new_watermark_width = int(img_width * scale)
-        new_watermark_height = int((new_watermark_width / watermark_width) * watermark_height)
-        resized_watermark = watermark.resize((new_watermark_width, new_watermark_height))
+            scale = 0.5
+            new_watermark_width = int(img_width * scale)
+            new_watermark_height = int((new_watermark_width / watermark_width) * watermark_height)
+            resized_watermark = watermark.resize((new_watermark_width, new_watermark_height))
 
-        x = (img_width - new_watermark_width) // 2
-        y = (img_height - new_watermark_height) // 2
+            x = (img_width - new_watermark_width) // 2
+            y = (img_height - new_watermark_height) // 2
 
-        img.paste(resized_watermark, (x, y), resized_watermark)
+            img.paste(resized_watermark, (x, y), resized_watermark)
 
-        img.save(img_path, format="png", quality=100)
+            img.save(img_path, format="png", quality=100)
 
 
 # class NewsPaperInfo(models.Model):

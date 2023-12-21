@@ -15,8 +15,10 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_img(self, obj):
-        return f"https://bekbekei.store{obj.img.url}"
-
+        if obj.img:
+            return f"https://bekbekei.store{obj.img.url}"
+        return None
+    
 
 class SubCategoriesListSerializer(serializers.ModelSerializer):
     class Meta:

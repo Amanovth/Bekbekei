@@ -29,7 +29,7 @@ class StoryVideos(models.Model):
 
 class Cards(models.Model):
     TYPE_CHOICES = [
-        (1, 'Успей купить'),
+        (1, 'Акция'),
         (2, 'Специальные предложения')
     ]
 

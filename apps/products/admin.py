@@ -5,6 +5,8 @@ from .models import Product, Category, SubCategory
 from admin_extra_buttons.api import ExtraButtonsMixin, button, confirm_action, link, view
 from admin_extra_buttons.utils import HttpResponseRedirectToReferrer
 
+from .API import update_products, sms
+
 
 class SubCategoryInline(admin.StackedInline):
     model = SubCategory
@@ -38,7 +40,7 @@ class ProductAdmin(ExtraButtonsMixin, admin.ModelAdmin):
     list_display_links = ("id", "title", "code",)
     search_fields = ("title", "code",)
     list_filter = ("cat", "sub_cat",)
-    fields = ("sub_cat", "title", "code", "old_price", "price", "price_for", "img", "sales")
+    fields = ("status", "sub_cat", "title", "code", "old_price", "price", "price_for", "img", "sales")
     save_as = True
     # readonly_fields = ("sales",)
 
@@ -49,9 +51,12 @@ class ProductAdmin(ExtraButtonsMixin, admin.ModelAdmin):
     get_html_img.short_description = "Изображение"
 
 
-    @button(permission='demo.add_demomodel1',
+    @button(
             change_form=True,
-            html_attrs={'style': 'background-color:#00ff00; color:black'})
-    def refresh(self, request):
+            html_attrs={'style': 'background-color:#da2222; color:white; padding: 0.563rem 2.75rem; border-radius: 0.25rem;'})
+            
+    def Refresh(self, request):
+        update_products()
         self.message_user(request, 'Список товаров обновлен!')
         return HttpResponseRedirectToReferrer(request)
+    
