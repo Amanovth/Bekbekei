@@ -26,23 +26,15 @@ class CategoryAdmin(admin.ModelAdmin):
     get_html_img.short_description = "Изображение"
 
 
-# @admin.register(SubCategory)
-# class SubCategoryAdmin(admin.ModelAdmin):
-#     list_display = ("id", "name", "cat",)
-#     list_display_links = ("id", "name",)
-#     list_filter = ("cat",)
-
-
 @admin.register(Product)
 class ProductAdmin(ExtraButtonsMixin, admin.ModelAdmin):
-    list_display = ("id", "title", "code", "sub_cat", "get_html_img", "status")
+    list_display = ("id", "title", "barrcode", "sub_cat", "get_html_img", "status")
     list_editable = ["status"]
     list_display_links = ("id", "title", "code",)
-    search_fields = ("title", "code",)
+    search_fields = ("title", "code", "barrcode")
     list_filter = ("cat", "sub_cat",)
-    fields = ("status", "sub_cat", "title", "code", "old_price", "price", "price_for", "img", "sales")
+    fields = ("status", "sub_cat", "title", "barrcode", "code", "old_price", "price", "price_for", "img", "sales")
     save_as = True
-    # readonly_fields = ("sales",)
 
     def get_html_img(self, object):
         if object.img:
@@ -66,7 +58,7 @@ admin.site.register(UnloadedCategories)
 
 @admin.register(UnloadedProducts)
 class UnloadedProductsAdmin(admin.ModelAdmin):
-    list_display = ("name", "product_id", "barrcode", "price", "quantity")
+    list_display = ("cat", "created_at", "status")
 
     add_fieldsets = (
         (
