@@ -172,3 +172,5 @@ INTERNAL_IPS = [
 ]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+ONE_C = os.getenv("ONE_C")

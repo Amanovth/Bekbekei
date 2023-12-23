@@ -1,9 +1,14 @@
+import os
+import requests
+from django.conf import settings
 from django.db import models
 from smart_selects.db_fields import ChainedForeignKey, GroupedForeignKey
 from django.utils.translation import gettext_lazy as _
 from PIL import Image, ImageDraw, ImageFont
-import os
-from django.conf import settings
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+# from .views import unload_products
+
 
 class Category(models.Model):
     name = models.CharField("Название", max_length=200)
@@ -58,8 +63,7 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         if self.sub_cat:
             self.cat = self.sub_cat.cat
-        # if not self.price:
-        #     self.price = '00.00'
+        self.price = float(self.price)
         super().save(*args, **kwargs)
 
         if self.img:
@@ -85,86 +89,61 @@ class Product(models.Model):
             img.save(img_path, format="png", quality=100)
 
 
-# class NewsPaperInfo(models.Model):
-#     MONTHS = [
-#         ("1", "Январь"),
-#         ("2", "Февраль"),
-#         ("3", "Март"),
-#         ("4", "Апрель"),
-#         ("5", "Май"),
-#         ("6", "Июнь"),
-#         ("7", "Июль"),
-#         ("8", "Август"),
-#         ("9", "Сентябрь"),
-#         ("10", "Октябрь"),
-#         ("11", "Ноябрь"),
-#         ("12", "Декабрь")
-#     ]
-#     month = models.CharField("Текущий месяц", max_length=15, choices=MONTHS, default=None)
-#     year = models.DateField(auto_now_add=True)
+class UnloadedCategories(models.Model):
+    name = models.CharField(_("Название"), max_length=255)
+    guid = models.CharField(_("GUID"), max_length=255)
 
-#     class Meta:
-#         verbose_name = "Газета"
-#         verbose_name_plural = "Газеты"
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _("Выгруженная категория")
+        verbose_name_plural = _("Выгруженные категории")
 
 
-# class NewsPaper(models.Model):
-#     paper = models.ForeignKey(NewsPaperInfo, on_delete=models.CASCADE, related_name="newspaper_image")
-#     images = models.ImageField("Газеты", upload_to="newpapers/%Y_%m")
+class UnloadedProducts(models.Model):
+    cat = models.ForeignKey(UnloadedCategories, on_delete=models.CASCADE)
+    created
+    # name = models.CharField(_("Заголовок"), max_length=255, null=True, blank=True)
+    # product_id = models.CharField(_("ID продукта"), max_length=255, null=True, blank=True)
+    # barrcode = models.IntegerField(_("Штрих-код"), null=True, blank=True)
+    # price = models.CharField(_("Цена"), max_length=20, null=True, blank=True)
+    # discounted_price = models.CharField(_("Цена со скидкой"), max_length=20, null=True, blank=True)
+    # quantity = models.CharField(_("Количество"), max_length=30, null=True, blank=True)
+    # unit = models.CharField(_("Единица"), max_length=10, null=True, blank=True)
+    # status  = models.BooleanField(_('Показать в мобильном приложении'), default=False)
 
+    def __str__(self):
+        if self.name:
+            return self.name
+        return self.cat. name
 
-# class Cards(models.Model):
-#     from_date = models.DateField("Дата начала акции", blank=True, null=True)
-#     from_date_after = models.CharField(blank=True, null=True, max_length=5, editable=False)
-#     to_date = models.DateField("Дата окончания акции", blank=True, null=True)
-#     to_date_after = models.CharField(blank=True, null=True, max_length=5, editable=False)
-#     TYPES = [
-#         ("1", "Успей купить"),
-#         ("2", "Специальные предложения")
-#     ]
-#     type = models.CharField("Тип", max_length=50, choices=TYPES)
-#     title = models.CharField("Название", max_length=150, help_text="Успей купить!")
-#     image = models.ImageField("Картинка", upload_to="promotions/%Y_%m")
+    class Meta:
+        verbose_name = _("Выгруженный продукт")
+        verbose_name_plural = _("Выгруженные продукты")
 
-#     def save(self, *args, **kwargs):
-#         self.from_date_after = self.from_date.strftime("%d.%m")
-#         self.to_date_after = self.to_date.strftime("%d.%m")
-#         super(Cards, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        # url = f"http://31.186.48.247/Roznica/hs/MobileApp/product-list?Guid={self.cat.guid}"
+        # headers = {"Authorization": settings.ONE_C}
 
-#     class Meta:
-#         verbose_name = "Карточка"
-#         verbose_name_plural = "Карточки (Акция/Предложения)"
+        # response = requests.get(url=url, headers=headers)
 
+        # product_list = response.json()
+        import json
+        with open("/home/chyngyz/Bekbekei/file.json", 'r') as file:
+            product_list = json.load(file)
 
-# class Map(models.Model):
-#     WORK_TIME_TYPE = [
-#         ("1", "круглосуточно"),
-#         ("2", "ежедневно с")
-#     ]
+        for product in product_list:
+            obj = Product(
+                # cat=self.cat,
+                title=product["name"],
+                code=product["product_id"],
+                # barrcode=product["Barcode"],
+                price=product["price"],
+                old_price=product["discounted_price"],
+                quantity=product["quantity"],
+                price_for=product["unit"]
+            )
+            obj.save()
 
-#     name = models.CharField("Название магазина", max_length=50, help_text="Бекбекей - 1 (Бишкек)")
-#     locate = models.CharField("Ориентир", max_length=150)
-#     phone = models.IntegerField("Телефон номер", blank=True, null=True)
-#     work_time = models.CharField("Время работы", max_length=50, choices=WORK_TIME_TYPE)
-#     from_time = models.TimeField("Время ОТ", blank=True, null=True, help_text='Если время работы - "ежедневно с" то укажите время!')
-#     from_time_after = models.CharField(max_length=5, blank=True, null=True, editable=False)
-#     to_time = models.TimeField("Время ДО", blank=True, null=True, help_text='Если время работы - "ежедневно с" то укажите время')
-#     to_time_after = models.CharField(max_length=5, blank=True, null=True, editable=False)
-
-#     def save(self, *args, **kwargs):
-#         self.from_time_after = self.from_time.strftime("%H:%M")
-#         self.to_time_after = self.to_time.strftime("%H:%M")
-#         super(Map, self).save(*args, **kwargs)
-
-#     class Meta:
-#         verbose_name = "Карта"
-
-
-# class DelAddress(models.Model):
-#     city = models.CharField("Город", max_length=50)
-#     street = models.CharField("Улица", max_length=50)
-#     home = models.CharField("Дом", max_length=10)
-#     frame = models.CharField("Корпус", max_length=50, blank=True, null=True)
-#     entrance = models.CharField("Подъезд", max_length=50, blank=True, null=True)
-#     floor = models.CharField("Этаж", max_length=50, blank=True, null=True)
-#     apartment = models.CharField("Квартира", max_length=50, blank=True, null=True)
+        return super(UnloadedProducts, self).save(*args, **kwargs)

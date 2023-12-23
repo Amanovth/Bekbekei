@@ -1,0 +1,146 @@
+[
+  {
+  "product_id": "5807caeb-b5da-11ec-963b-1831bfbd764e",
+  "name": "Шлепки 190с по карте 180с",
+  "price": "180",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000022417"
+  },
+  {
+  "product_id": "5807caec-b5da-11ec-963b-1831bfbd764e",
+  "name": "Шлепки 160с по карте 150с",
+  "price": "150",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000022424"
+  },
+  {
+  "product_id": "5807caee-b5da-11ec-963b-1831bfbd764e",
+  "name": "Шлепки 260с по карте 250с",
+  "price": "250",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000022455"
+  },
+  {
+  "product_id": "5807caef-b5da-11ec-963b-1831bfbd764e",
+  "name": "Шлепки 230с по карте 220с",
+  "price": "220",
+  "discounted_price": 0,
+  "quantity": "6",
+  "unit": "кг",
+  "Barcode": "2200000022462"
+  },
+  {
+  "product_id": "5807caf1-b5da-11ec-963b-1831bfbd764e",
+  "name": "Шлепки 105с по карте 100с",
+  "price": "100",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000022486"
+  },
+  {
+  "product_id": "5807caf2-b5da-11ec-963b-1831bfbd764e",
+  "name": "Шлепки 200с по карте 190с",
+  "price": "190",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000022493"
+  },
+  {
+  "product_id": "5807caf5-b5da-11ec-963b-1831bfbd764e",
+  "name": "Шлепки 210с по карте 200с",
+  "price": "200",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000022523"
+  },
+  {
+  "product_id": "5807caf7-b5da-11ec-963b-1831bfbd764e",
+  "name": "Шлепки 110с по карте 105с",
+  "price": "105",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000022547"
+  },
+  {
+  "product_id": "5807caf8-b5da-11ec-963b-1831bfbd764e",
+  "name": "Шлепки 120с по карте 110с",
+  "price": "110",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000022554"
+  },
+  {
+  "product_id": "5807caf9-b5da-11ec-963b-1831bfbd764e",
+  "name": "Шлепки 100с по карте 95с",
+  "price": "95",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000022561"
+  },
+  {
+  "product_id": "8e60e4a2-b5dc-11ec-963b-1831bfbd764e",
+  "name": "Дом Шлепки 180с по карте 170с",
+  "price": "170",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000035813"
+  },
+  {
+  "product_id": "d5d747a8-b5dc-11ec-963b-1831bfbd764e",
+  "name": "Шлепки Детские 30-35р 150с по карте 140с",
+  "price": "140",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000037817"
+  },
+  {
+  "product_id": "d5d747a9-b5dc-11ec-963b-1831bfbd764e",
+  "name": "Шлепки Детские 25-29р 150с по карте 140с",
+  "price": "140",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000037824"
+  },
+  {
+  "product_id": "fac68ac5-b5dc-11ec-963b-1831bfbd764e",
+  "name": "Шлепки 225с по карте 215с",
+  "price": "215",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000038098"
+  },
+  {
+  "product_id": "fac68ac6-b5dc-11ec-963b-1831bfbd764e",
+  "name": "Шлепки 245с по карте 235с",
+  "price": "235",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000038104"
+  },
+  {
+  "product_id": "d19ad985-b5de-11ec-963b-1831bfbd764e",
+  "name": "Шлепки 235с по карте 225с",
+  "price": "225",
+  "discounted_price": 0,
+  "quantity": "1",
+  "unit": "кг",
+  "Barcode": "2200000047274"
+  }
+  ]

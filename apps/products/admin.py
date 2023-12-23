@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import Product, Category, SubCategory
+from .models import Product, Category, SubCategory, UnloadedCategories, UnloadedProducts
 
 from admin_extra_buttons.api import ExtraButtonsMixin, button, confirm_action, link, view
 from admin_extra_buttons.utils import HttpResponseRedirectToReferrer
@@ -60,3 +60,26 @@ class ProductAdmin(ExtraButtonsMixin, admin.ModelAdmin):
         self.message_user(request, 'Список товаров обновлен!')
         return HttpResponseRedirectToReferrer(request)
     
+
+admin.site.register(UnloadedCategories)
+
+
+@admin.register(UnloadedProducts)
+class UnloadedProductsAdmin(admin.ModelAdmin):
+    list_display = ("name", "product_id", "barrcode", "price", "quantity")
+
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "cat",
+                ),
+            },
+        ),
+    )
+    def get_fieldsets(self, request, obj=None):
+        if not obj:
+            return self.add_fieldsets
+        return super().get_fieldsets(request, obj)
