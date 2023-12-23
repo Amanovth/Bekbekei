@@ -5,9 +5,6 @@ from django.db import models
 from smart_selects.db_fields import ChainedForeignKey, GroupedForeignKey
 from django.utils.translation import gettext_lazy as _
 from PIL import Image, ImageDraw, ImageFont
-from django.dispatch import receiver
-from django.db.models.signals import post_save
-# from .views import unload_products
 
 
 class Category(models.Model):
@@ -127,11 +124,15 @@ class UnloadedProducts(models.Model):
         product_list = response.json()
 
         for product in product_list:
+            price = product.get("price", "")
+            cleaned_price = price.replace(' ', '').replace(',', '.')
+            cleaned_price = ''.join(filter(lambda x: x.isdigit() or x == '.', cleaned_price))
+
             obj = Product(
                 title=product["name"],
                 code=product["product_id"],
                 barrcode=product["Barcode"],
-                price=product["price"],
+                price=cleaned_price,
                 old_price=product["discounted_price"],
                 quantity=product["quantity"],
                 price_for=product["unit"]

@@ -30,7 +30,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductAdmin(ExtraButtonsMixin, admin.ModelAdmin):
     list_display = ("id", "title", "barrcode", "sub_cat", "get_html_img", "status")
     list_editable = ["status"]
-    list_display_links = ("id", "title", "code",)
+    list_display_links = ("id", "title",)
     search_fields = ("title", "code", "barrcode")
     list_filter = ("cat", "sub_cat",)
     fields = ("status", "sub_cat", "title", "barrcode", "code", "old_price", "price", "price_for", "img", "sales")
