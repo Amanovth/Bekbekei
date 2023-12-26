@@ -29,8 +29,8 @@ class StoryVideos(models.Model):
 
 class Cards(models.Model):
     TYPE_CHOICES = [
-        (1, 'Акция'),
-        (2, 'Специальные предложения')
+        (1, 'Специальные предложения'),
+        (2, 'Акция')
     ]
 
     type = models.IntegerField('Тип', choices=TYPE_CHOICES)

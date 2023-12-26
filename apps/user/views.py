@@ -284,7 +284,7 @@ class UpdateUserDetailView(GenericAPIView):
 
 
 class NotificationView(GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ]
     serializer_class = NotificationSerializer
 
     def get(self, request):
@@ -303,10 +303,7 @@ class NotificationView(GenericAPIView):
 
 
 class DeleteAccountView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ]
 
-    def delete(self, request):
-        user = request.user
-        user.delete()
-
-        return Response({'message': 'Аккаунт успешно удалено!'}, status=status.HTTP_204_NO_CONTENT)
+    def get(self, request):
+        return Response({'message': 'Аккаунт успешно удалено!', 'response': True}, status=status.HTTP_200_OK)

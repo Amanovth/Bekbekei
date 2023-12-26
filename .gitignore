@@ -37,3 +37,7 @@ doc-dev
 
 *.log
 .log
+
+backup.dump
+
+/apps/products/API.py

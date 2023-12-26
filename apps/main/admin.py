@@ -24,7 +24,7 @@ class StoriesAdmin(admin.ModelAdmin):
 
 @admin.register(Cards)
 class CardsAdmin(admin.ModelAdmin):
-    list_display = ["id", "title", "datefrom", "dateto", "get_html_img"]
+    list_display = ["id", "title", "type", "datefrom", "dateto", "get_html_img"]
     list_display_links = (
         "id",
         "title",

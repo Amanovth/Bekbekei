@@ -5,7 +5,7 @@ from .models import Product, Category, SubCategory, UnloadedCategories, Unloaded
 from admin_extra_buttons.api import ExtraButtonsMixin, button, confirm_action, link, view
 from admin_extra_buttons.utils import HttpResponseRedirectToReferrer
 
-from .API import update_products, sms
+from .API import update_products
 
 
 class SubCategoryInline(admin.StackedInline):
@@ -43,14 +43,14 @@ class ProductAdmin(ExtraButtonsMixin, admin.ModelAdmin):
     get_html_img.short_description = "Изображение"
 
 
-    @button(
-            change_form=True,
-            html_attrs={'style': 'background-color:#da2222; color:white; padding: 0.563rem 2.75rem; border-radius: 0.25rem;'})
+    # @button(
+    #         change_form=True,
+    #         html_attrs={'style': 'background-color:#da2222; color:white; padding: 0.563rem 2.75rem; border-radius: 0.25rem;'})
             
-    def Refresh(self, request):
-        update_products()
-        self.message_user(request, 'Список товаров обновлен!')
-        return HttpResponseRedirectToReferrer(request)
+    # def Refresh(self, request):
+    #     update_products()
+    #     self.message_user(request, 'Список товаров обновлен!')
+    #     return HttpResponseRedirectToReferrer(request)
     
 
 admin.site.register(UnloadedCategories)
