@@ -306,4 +306,7 @@ class DeleteAccountView(APIView):
     permission_classes = [IsAuthenticated, ]
 
     def get(self, request):
+        user = request.user
+        token = Token.objects.get(user=user)
+        token.delete()
         return Response({'message': 'Аккаунт успешно удалено!', 'response': True}, status=status.HTTP_200_OK)

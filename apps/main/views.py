@@ -15,15 +15,17 @@ class StoriesView(ListAPIView):
 
 
 class CardListOneView(generics.ListAPIView):
-    queryset = Cards.objects.filter(type="1")
+    queryset = Cards.objects.filter(type="1").order_by('-id')[:3]
     serializer_class = CardSerializers
 
 
 class CardListTwoView(generics.ListAPIView):
-    queryset = Cards.objects.filter(type="2")
+    queryset = Cards.objects.filter(type="2").order_by('-id')[:3]
     serializer_class = CardSerializers
 
-
+class AllCardView(generics.ListAPIView):
+    queryset = Cards.objects.all()
+    serializer_class = CardSerializers
 
 class CardDetailView(generics.RetrieveAPIView):
     queryset = Cards.objects.all()

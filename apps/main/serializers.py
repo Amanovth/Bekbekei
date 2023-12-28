@@ -82,9 +82,14 @@ class CardSerializers(serializers.ModelSerializer):
 
 
 class NotificationsImgSerializer(serializers.ModelSerializer):
+    img = serializers.SerializerMethodField()
+    
     class Meta:
         model = NotificationsImg
         fields = ["id", "img"]
+
+    def get_img(self, obj):
+        return f"https://bekbekei.store{obj.img.url}"
 
 
 class NotificationsSerializer(serializers.ModelSerializer):
