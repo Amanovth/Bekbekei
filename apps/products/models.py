@@ -5,6 +5,7 @@ from django.db import models
 from smart_selects.db_fields import ChainedForeignKey, GroupedForeignKey
 from django.utils.translation import gettext_lazy as _
 from PIL import Image, ImageDraw, ImageFont
+from .services import upload_sms
 
 
 class Category(models.Model):
@@ -141,5 +142,5 @@ class UnloadedProducts(models.Model):
                 price_for=product["unit"]
             )
             obj.save()
-
+        upload_sms()
         return super(UnloadedProducts, self).save(*args, **kwargs)
