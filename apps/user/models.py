@@ -30,6 +30,7 @@ class User(AbstractUser):
     email = models.EmailField("Электронная почта", max_length=254, blank=True, null=True)
 
     # Detail
+    user_type = models.BooleanField('Оптовик', default=False)
     birthday = models.DateField("Дата рождения", null=True, blank=True)
     gender = models.CharField("Пол", max_length=50, choices=GENDERS_CHOICES, null=True, blank=True)
     language = models.CharField("Родной язык", max_length=50, choices=LANGUAGE_CHOICES, null=True, blank=True)

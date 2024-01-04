@@ -11,6 +11,7 @@ class UserAdmin(UserAdmin):
             None,
             {
                 "fields": (
+                    "user_type",
                     "phone",
                     "first_name",
                     "last_name",

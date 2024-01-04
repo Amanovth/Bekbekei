@@ -11,6 +11,7 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path("auth/", include("apps.user.urls")),
     path("product/", include("apps.products.urls")),
+    path("order/", include("apps.order.urls")),
     path("", include("apps.main.urls"))
 ]
 urlpatterns += yasg_urlpatterns
