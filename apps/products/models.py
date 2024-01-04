@@ -85,6 +85,9 @@ class Product(models.Model):
 
             img.save(img_path, format="png", quality=100)
 
+    def __str__(self):
+        return f'{self.title}'
+
 
 class UnloadedCategories(models.Model):
     name = models.CharField(_("Название"), max_length=255)
