@@ -16,6 +16,22 @@ class TeleBot(models.Model):
         verbose_name_plural = 'Настройка телеграм бота'
 
 
+class DeliveryAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    city = models.CharField(_('Город'), max_length=100)
+    street = models.CharField(_('Улица'), max_length=100)
+    home = models.CharField(_('Дом'), max_length=100)
+    building = models.CharField(_('Корпус'), max_length=100)
+    ward = models.CharField(_('Подъезд'), max_length=100)
+    floot = models.CharField(_('Этаж'), max_length=100)
+    apartment = models.CharField(_('Квартира'), max_length=100)
+
+    status = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return f'{self.city} {self.street} {self.home} {self.building} {self.ward} {self.floot} {self.apartment}'
+
 class Order(models.Model):
     STATUS_TYPE = (
         ('New', 'Новый'),
@@ -25,8 +41,10 @@ class Order(models.Model):
     )
     status = models.CharField(_('Статус'), max_length=100, default='New', choices=STATUS_TYPE)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
 
+    sum = models.CharField(_('К оплате'), max_length=100)
+    address = models.ForeignKey(DeliveryAddress, on_delete=models.SET_NULL, null=True, blank=True)
     first_name = models.CharField(_('Имя'), max_length=100)
     last_name = models.CharField(_('Фамилия'), max_length=100)
     number = models.CharField(_('Телефон номер'), max_length=20)
@@ -38,8 +56,9 @@ class Order(models.Model):
 
 class ProductInline(models.Model):
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True, related_name='product_for_order')
+
     # product = models.ForeignKey(another_model_product, verbose_name=_("Товар"), on_delete=models.SET_NULL, null=True, blank=True)
-    product = models.CharField(_('Товар'), max_length=500)
+    product = models.CharField(_("Товар"), max_length=100)
     count = models.IntegerField(_('Кол-во'))
 
     class Meta:

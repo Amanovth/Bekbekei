@@ -33,7 +33,7 @@ class ProductAdmin(ExtraButtonsMixin, admin.ModelAdmin):
     list_display_links = ("id", "title",)
     search_fields = ("title", "code", "barrcode")
     list_filter = ("cat", "sub_cat",)
-    fields = ("status", "sub_cat", "title", "barrcode", "code", "old_price", "price", "price_for", "img", "sales")
+    fields = ("status", "sub_cat", "title", "barrcode", "code", "old_price", "price", "wholesale_price", "price_for", "img", "sales")
     save_as = True
 
     def get_html_img(self, object):

@@ -98,12 +98,12 @@ class LoginSerializer(serializers.Serializer):
 
 class UserInfoSerializer(serializers.ModelSerializer):
     qrimg = serializers.SerializerMethodField()
-    # bonus = serializers.SerializerMethodField()
+    bonus = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = [
-            "user_type",
+            "user_roll",
             "phone", "first_name", "last_name", "bonus_id", "bonus", "qrimg",
             "birthday", "gender", "language", "married", "status",
             "city", "children", "animal", "car", "email", "notification", "auto_brightness",
@@ -113,9 +113,9 @@ class UserInfoSerializer(serializers.ModelSerializer):
         if obj.qrimg:
             return f"https://bekbekei.store{obj.qrimg.url}"
 
-    # def get_bonus(self, obj):
-    #     user_id = obj.id
-    #     return os_getbalance(user_id)
+    def get_bonus(self, obj):
+        user_id = obj.id
+        return os_getbalance(user_id)
 
 
 class ChangePasswordSerializer(serializers.Serializer):

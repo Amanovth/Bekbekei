@@ -19,13 +19,14 @@ class ProductInlineAdmin(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     inlines = [ProductInlineAdmin]
 
-    list_display = ['id', 'name', 'products', 'productscount', 'status', 'number']
-    list_display_links = None
+    list_display = ['id', 'name', 'products', 'productscount', 'status', 'number', 'address_list', 'sum']
+    list_display_links = ['id', 'name', 'products', 'productscount']
     list_editable = ['status']
 
     def name(self, obj):
         return f'{obj.last_name} {obj.first_name}'
     
+    name.short_description = format_html(f'<span style="color:#007bff;">ФИО</span>')
 
     def products(self, obj):
         a = ''
@@ -41,7 +42,7 @@ class OrderAdmin(admin.ModelAdmin):
         else:
             return format_html(a)
 
-    products.short_description = 'Товары'
+    products.short_description = format_html(f'<span style="color:#007bff;">Товары</span>')
 
 
     def productscount(self, obj):
@@ -58,8 +59,13 @@ class OrderAdmin(admin.ModelAdmin):
         else:
             return format_html(a)
 
-    productscount.short_description = 'Кол-во'
+    productscount.short_description = format_html('<span style="color:#007bff;">Кол-во</span>')
 
+    def address_list(self, obj):
+        if obj.address:
+            return f'{obj.address.city} | {obj.address.street} {obj.address.home}'
+
+    address_list.short_description = format_html('<span style="color:#007bff;">Адрес</span>')
 
     def has_add_permission(self, request):
         return False

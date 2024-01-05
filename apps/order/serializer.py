@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Order, ProductInline
+from .models import Order, ProductInline, DeliveryAddress
+from apps.products.models import Product
 
 class ProductInlineSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,15 +14,28 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'first_name', 'last_name', 'number', 'product_for_order']
+        fields = ['id', 'address', 'product_for_order']
 
     def create(self, validated_data):
         product_data = validated_data.pop('product_for_order')
         order = Order.objects.create(**validated_data)
+        total_sum = 0 
         for i in product_data:
+            product_id = int(i['product'])
+            product = Product.objects.get(pk=product_id)
+            count = i['count']
+            total_sum += product.wholesale_price * count
             ProductInline.objects.create(
                 order=order,
-                product=i['product'],
-                count=i['count']
+                product=product,
+                count=count
             )
+        
+        order.sum = total_sum
+        order.save()
         return order
+    
+class DeliveryAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveryAddress
+        exclude = ['user']

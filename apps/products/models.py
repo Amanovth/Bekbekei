@@ -45,6 +45,7 @@ class Product(models.Model):
     code = models.CharField("ID товара", max_length=100, null=True, blank=True, unique=True)
     old_price = models.CharField("Старая цена", max_length=100, blank=True, null=True)
     price = models.FloatField("Цена")
+    wholesale_price = models.FloatField("Оптовая цена", null=True, blank=True)
     price_for = models.CharField("Цена за", choices=PRICE_FOR_CHOICES, default="шт")
     img = models.ImageField("Изображение", upload_to="product-detail/%Y_%m", null=True, blank=True)
     sales = models.IntegerField(_("Количество продаж"), default=0)
