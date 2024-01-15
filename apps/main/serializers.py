@@ -83,7 +83,7 @@ class CardSerializers(serializers.ModelSerializer):
 
 class NotificationsImgSerializer(serializers.ModelSerializer):
     img = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = NotificationsImg
         fields = ["id", "img"]

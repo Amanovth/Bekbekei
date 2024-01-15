@@ -6,6 +6,7 @@ from rest_framework.generics import (
 from rest_framework.permissions import (
     IsAuthenticated
 )
+
 from rest_framework.views import APIView
 from django.utils.translation import gettext_lazy as _
 from rest_framework.response import Response
@@ -14,7 +15,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 
 from .services import send_sms, os_registration
-from .models import User
+from .models import User, RollRequest
 from .serializers import (
     RegisterSerializers,
     VerifyPhoneSerializer,
@@ -27,8 +28,10 @@ from .serializers import (
     UpdateUserDetailSerializer,
     NotificationSerializer,
     DeleteAccountSerializer,
+    UpdatePasswordSerializer,
 )
-
+from .services import contragent_request
+from datetime import datetime
 
 class RegisterView(CreateAPIView):
     queryset = User.objects.all()
@@ -204,6 +207,35 @@ class UserInfo(APIView):
         return Response(user_info)
 
 
+class UpdatePasswordView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UpdatePasswordSerializer
+
+    def post(self, request):
+        user = request.user
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            old_password = serializer.data["old_password"]
+            password = serializer.data["password"]
+            confirm_password = serializer.data["confirm_password"]
+
+            if password != confirm_password:
+                return Response({"response": False, "message": _("Пароли не совпадают")})
+
+            if not user.check_password(old_password):
+                return Response({"response": False, "message": _("Вы ввели неправильный пароль")})
+            
+            if old_password == password:
+                return Response({"response": False, "message": _("Новый пароль не должен совпадать со старым.")})
+
+            user.set_password(password)
+            user.save()
+
+            return Response({"response": True, "message": _("Пароль успешно обновлен")})
+        return Response(serializer.errors)
+    
+    
 class ChangePasswordView(GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ChangePasswordSerializer
@@ -310,3 +342,23 @@ class DeleteAccountView(APIView):
         token = Token.objects.get(user=user)
         token.delete()
         return Response({'message': 'Аккаунт успешно удалено!', 'response': True}, status=status.HTTP_200_OK)
+
+
+    
+class RollRequestView(APIView):
+    def get(self, request):
+        if request.user.user_roll == "1":
+            if not request.user.roll_request:
+                current_datetime = datetime.now()
+                formatted_datetime = current_datetime.strftime('%d.%m.%Y %H:%M')
+
+                RollRequest.objects.create(user=request.user, roll=request.user.user_roll, name=request.user.first_name, surname=request.user.last_name, date_time=formatted_datetime)
+                contragent_request(request.user.phone, request.user.first_name, request.user.last_name)
+
+                request.user.roll_request = True
+                request.user.save()
+
+                return Response({"response": True, "message":_("Заявка успешно отправлено")})
+            return Response({"response": False, "message":_("Вы уже отправили запрос!")})
+        return Response({"response": False, "message":_("У вас уже есть права к оптовым товарам")})
+

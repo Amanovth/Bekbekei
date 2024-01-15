@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Report</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Bekbekei Order Table</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Товар</th>
+            {% for user in order_info %}
+                <th>{{ user.user_info }}</th>
+            {% endfor %}
+            <th>∞</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in table %}
+            <tr>
+                <td>{{ product.product }}</td>
+                {% for i in product.order_info.all %}
+                <td>{{ i.count }} </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

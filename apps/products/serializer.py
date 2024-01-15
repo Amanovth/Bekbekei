@@ -10,8 +10,8 @@ from .models import (
 class ProductSerializer(serializers.ModelSerializer):
     img = serializers.SerializerMethodField()
 
-    # price = serializers.SerializerMethodField()
-    # old_price = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
+    old_price = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -22,19 +22,22 @@ class ProductSerializer(serializers.ModelSerializer):
             return f"https://bekbekei.store{obj.img.url}"
         return None
     
-    # def get_price(self, obj):
-    #     user = self.context['request'].user
-    #     if user.user_roll == '1':
-    #         return f'{obj.price}'
-    #     else:
-    #         return f'{obj.wholesale_price}'
+    def get_old_price(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            if user.user_roll == '2':
+                return f'{obj.wholesale_price}'
+            return f'{obj.old_price}'
+        return f'{obj.old_price}'
 
-    # def get_old_price(self, obj):
-    #     user = self.context['request'].user
-    #     if user.user_roll == '1':
-    #         return f'{obj.old_price}'
-    #     else:
-    #         return None
+    def get_price(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            if user.user_roll == '2':
+                return None
+            return f'{obj.price}'
+        return f'{obj.price}'
+            
 
     
     

@@ -1,7 +1,7 @@
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-
+from rest_framework.permissions import IsAuthenticated
 from .filters import ProductFilter
 from .models import (
     Product,
@@ -26,6 +26,11 @@ class ProductListView(ListAPIView):
         queryset = super().get_queryset()
         queryset = queryset.filter(status=True)
         ordering = self.request.query_params.get("ordering", "-id")
+        
+        if self.request.user.is_authenticated:
+            if self.request.user.user_roll == '2':
+                queryset = queryset.filter(wholesale_price__gt=0)
+
         if ordering:
             return queryset.order_by(ordering)
         return queryset

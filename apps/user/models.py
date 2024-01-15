@@ -35,6 +35,8 @@ class User(AbstractUser):
         ('2', 'Оптовик')
     )
     user_roll = models.CharField('Роль', max_length=100, choices=USER_CHOICE, default='1')
+    roll_request = models.BooleanField("Запрос на контрагент уже есть", default=False)
+
     birthday = models.DateField("Дата рождения", null=True, blank=True)
     gender = models.CharField("Пол", max_length=50, choices=GENDERS_CHOICES, null=True, blank=True)
     language = models.CharField("Родной язык", max_length=50, choices=LANGUAGE_CHOICES, null=True, blank=True)
@@ -67,6 +69,30 @@ class User(AbstractUser):
         super(User, self).save(*args, **kwargs)
 
 
+
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+
+    
+class RollRequest(models.Model):
+    USER_CHOICE = (
+        ('1', 'Клиент'),
+        ('2', 'Оптовик')
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    roll = models.CharField('Роль', max_length=100, choices=USER_CHOICE, default='1')
+    name = models.CharField('Имя', max_length=100, null=True, blank=True)
+    surname = models.CharField('Фамилия', max_length=100, null=True, blank=True)
+    date_time = models.CharField('Дата и Время', max_length=100, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.roll == '2':
+            self.user.user_roll = '2'
+            self.user.save()
+        super(RollRequest, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = 'Запрос на "Оптовик"'
+        verbose_name_plural = 'Запросы на "Оптовик"'

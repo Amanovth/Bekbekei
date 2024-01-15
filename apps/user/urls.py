@@ -11,6 +11,8 @@ from .views import (
     UpdateUserDetailView,
     NotificationView,
     DeleteAccountView,
+    RollRequestView,
+    UpdatePasswordView,
 )
 
 urlpatterns = [
@@ -19,10 +21,12 @@ urlpatterns = [
     path("send-code", SendCodeView.as_view(), name="send-code"),
     path("login", LoginView.as_view(), name="login"),
     path("user-info", UserInfo.as_view(), name="user-info"),
+    path("update-password", UpdatePasswordView.as_view(), name='update-password'),
     path("change-password", ChangePasswordView.as_view(), name="change-password"),
     path("reset-password", ResetPasswordView.as_view(), name="reset-password"),
     path("reset-password-verify", ResetPasswordVerifyView.as_view(), name="reset-password-verify"),
     path("update-user-detail", UpdateUserDetailView.as_view(), name="update-user-detail"),
     path("notification", NotificationView.as_view(), name="get-notification"),
-    path("delete-account", DeleteAccountView.as_view(), name="delete-account")
+    path("delete-account", DeleteAccountView.as_view(), name="delete-account"),
+    path("roll-request/", RollRequestView.as_view(), name="roll-request")
 ]

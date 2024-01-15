@@ -1,6 +1,8 @@
 from .models import User
 from django.conf import settings
 import requests
+import telebot
+from apps.order.models import TeleBot as bot_base
 
 
 def send_sms(phone, message, code):
@@ -62,3 +64,11 @@ def os_getbalance(user_id):
         return f"{balance}"
     else:
         print("Не удалось получить баланс. Код состояния:", response.status_code)
+
+
+def contragent_request(number, name, surname):
+    bot = telebot.TeleBot(bot_base.objects.first().bot_token)
+
+    message = f"Новая заявка, пользователь {number} ({surname} {name}) отправил запрос на контрагент!"
+
+    bot.send_message(chat_id=bot_base.objects.first().chat_id , text=message)

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.admin import UserAdmin
-from .models import User
+from .models import User, RollRequest
 
 
 @admin.register(User)
@@ -11,13 +11,13 @@ class UserAdmin(UserAdmin):
             None,
             {
                 "fields": (
+                    "roll_request",
                     "user_roll",
                     "phone",
                     "first_name",
                     "last_name",
                     "password",
                     "bonus_id",
-                    "bonus",
                     "qrimg",
                 )
             },
@@ -94,3 +94,11 @@ class UserAdmin(UserAdmin):
         "email"
     )
     ordering = ("-id",)
+
+
+@admin.register(RollRequest)
+class RollRequestAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'name', 'surname', 'date_time', 'roll']
+    list_display_links = ['id', 'user']
+    list_editable = ['roll']
+

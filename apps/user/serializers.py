@@ -103,7 +103,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            "user_roll",
+            "user_roll", "roll_request",
             "phone", "first_name", "last_name", "bonus_id", "bonus", "qrimg",
             "birthday", "gender", "language", "married", "status",
             "city", "children", "animal", "car", "email", "notification", "auto_brightness",
@@ -117,6 +117,21 @@ class UserInfoSerializer(serializers.ModelSerializer):
         user_id = obj.id
         return os_getbalance(user_id)
 
+class UpdatePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(
+        required=True, 
+        error_messages={"required": "Это поле обязательно."}
+    )
+    password = serializers.CharField(
+        required=True, 
+        min_length=8, 
+        error_messages={"min_length": "Не менее 8 символов.", "required": "Это поле обязательно."}
+    )
+    confirm_password = serializers.CharField(
+        required=True,
+        min_length=8, 
+        error_messages={"min_length": "Не менее 8 символов.", "required": "Это поле обязательно."}
+    )
 
 class ChangePasswordSerializer(serializers.Serializer):
     password = serializers.CharField(
@@ -167,6 +182,8 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["notification", "auto_brightness", "email"]
+
+    
 
 
 class DeleteAccountSerializer(serializers.ModelSerializer):
