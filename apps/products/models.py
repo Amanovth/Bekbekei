@@ -133,15 +133,23 @@ class UnloadedProducts(models.Model):
             cleaned_price = price.replace(' ', '').replace(',', '.')
             cleaned_price = ''.join(filter(lambda x: x.isdigit() or x == '.', cleaned_price))
 
-            obj = Product(
-                title=product["name"],
-                code=product["product_id"],
-                barrcode=product["Barcode"],
-                price=cleaned_price,
-                old_price=product["discounted_price"],
-                quantity=product["quantity"],
-                price_for=product["unit"]
-            )
-            obj.save()
-        upload_sms()
+            product_exist = Product.objects.get(code=product["product_id"])
+
+            if product_exist:
+                product_exist.price = cleaned_price
+                product_exist.old_price = product["discounted_price"]
+                product_exist.save()
+
+            else:
+                obj = Product(
+                    title=product["name"],
+                    code=product["product_id"],
+                    barrcode=product["Barcode"],
+                    price=cleaned_price,
+                    old_price=product["discounted_price"],
+                    quantity=product["quantity"],
+                    price_for=product["unit"]
+                )
+                obj.save()
+        # upload_sms()
         return super(UnloadedProducts, self).save(*args, **kwargs)
