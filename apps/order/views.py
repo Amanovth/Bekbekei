@@ -7,6 +7,7 @@ from .serializer import *
 from .services import teleorder, teleordercancel
 from datetime import datetime
 from django.views import View
+from django.views.generic.detail import DetailView
 
 class OrderView(generics.CreateAPIView):
     serializer_class = OrderSerializer
@@ -99,5 +100,10 @@ class DeliveryAddressDeleteView(generics.GenericAPIView):
 class OrderTableView(View):
     def get(self, request):
         table = OrderTable.objects.all()
-        order_info = OrderTableInfo.objects.all()
-        return render(request, 'order/index.html', {'table': table, 'order_info': order_info})
+        return render(request, 'order/index.html', {'table': table})
+    
+
+class OrderTableDetailView(View):
+    def get(self, request, pk):
+        table = OrderTable.objects.get(id=pk)
+        return render(request, 'order/detail.html', {'table': table})

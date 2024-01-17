@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Order Table</title>
+    <title>{{ table.product }}</title>
     <style>
         body {
             display: flex;
@@ -32,16 +32,6 @@
             text-align: center;
             font-family: Arial, Helvetica, sans-serif;
         }
-
-        tbody tr:hover {
-            background-color: rgba(0, 255, 247, 0.093);
-            cursor: pointer;
-        }
-
-        tbody tr td:hover {
-            background-color: rgba(0, 255, 247, 0.263);
-        }
-
         .back-button {
             position: fixed;
             top: 20px;
@@ -64,22 +54,22 @@
 
 <body>
     <button class="back-button" onclick="history.back()">Назад</button>
-    <h2>Bekbekei - Сводка заказов</h2>
+    <h2>{{ table.product }}</h2>
 
     <table>
         <thead>
             <tr>
-                <th>I D</th>
-                <th>Товар</th>
-                <th>Общее количество</th>
+                <th>Покупатели</th>
+                <th>Количество</th>
+                <th>Тел-номер</th>
             </tr>
         </thead>
         <tbody>
-            {% for product in table %}
-            <tr onclick="window.location.href='./{{ product.id }}'">
-                <td>{{ product.id }}</td>
-                <td>{{ product.product }}</td>
-                <td>{{ product.count }}</td>
+            {% for info in table.order_info.all %}
+            <tr>
+                <td>{{ info.user_info }}</td>
+                <td>{{ info.count }}</td>
+                <td>{{ info.user.phone }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -88,27 +78,3 @@
 </body>
 
 </html>
-
-
-
-<!-- <table>
-    <thead>
-        <tr>
-            <th>Товар</th>
-            {% for user in order_info %}
-                <th>{{ user.user_info }}</th>
-            {% endfor %}
-            <th>∞</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for product in table %}
-            <tr>
-                <td>{{ product.product }}</td>
-                {% for i in product.order_info.all %}
-                <td>{{ i.count }} </td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </tbody>
-</table> -->

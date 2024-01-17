@@ -3,7 +3,7 @@ from apps.products.models import Product as another_model_product
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
 from apps.user.models import User
-from django.db.models import F
+from django.db.models import F, Sum
 
 
 class TeleBot(models.Model):
@@ -20,13 +20,21 @@ class TeleBot(models.Model):
 
 class OrderTable(models.Model):
     product = models.CharField('Товар', blank=True, null=True)
-
+    count = models.IntegerField('Общее количество', blank=True, null=True)
+    
     class Meta:
         verbose_name = "Таблица заказов"
         verbose_name_plural = "Таблица заказов"
 
-    def __str__(self):
-        return f'{self.product}'
+    # def save(self, *args, **kwargs):
+    #     order = self.order_info.all()
+    #     sum = 0
+    #     for i in order:
+    #         sum += i(i.sum)
+    #     super(OrderTable, self).save(*args, **kwargs)
+
+    # def __str__(self):
+    #     return f'{self.product}'
 
 class OrderTableInfo(models.Model):
     order = models.ForeignKey(OrderTable, on_delete=models.CASCADE, related_name='order_info')
@@ -78,7 +86,7 @@ class Order(models.Model):
             order_table, created = OrderTable.objects.get_or_create(product=i.product)
 
             if created:
-                order_info = OrderTableInfo.objects.create(order=order_table, user=self.user, count=i.count,)
+                order_info = OrderTableInfo.objects.create(order=order_table, user=self.user, count=i.count)
             else:
                 order_info_exists = OrderTableInfo.objects.filter(order=order_table, user=self.user).exists()
                 order_info_done = OrderTableInfo.objects.filter(order=order_table, user=self.user, done=False).exists()
@@ -88,8 +96,12 @@ class Order(models.Model):
                     order_info.count = F('count') + i.count
                     order_info.save()
                 else:
-                    order_info = OrderTableInfo.objects.create(order=order_table, user=self.user, count=i.count,)
+                    order_info = OrderTableInfo.objects.create(order=order_table, user=self.user, count=i.count)
 
+        order_tables = OrderTable.objects.annotate(total_count=Sum('order_info__count'))
+        for order_table in order_tables:
+            order_table.count = order_table.total_count
+            order_table.save()
     class Meta:
         verbose_name = _('Заказ')
         verbose_name_plural = _('Заказы')

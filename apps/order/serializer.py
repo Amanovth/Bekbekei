@@ -15,7 +15,14 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'address', 'product_for_order']
-
+    
+    def validate(self, attrs):
+        address = attrs.get("address")
+        if not address:
+            raise serializers.ValidationError({"address": "Добавьте адрес прежде чем заказать"})
+        
+        return super().validate(attrs)
+    
     def create(self, validated_data):
         product_data = validated_data.pop('product_for_order')
         order = Order.objects.create(**validated_data)
